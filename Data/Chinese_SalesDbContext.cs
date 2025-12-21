@@ -17,6 +17,8 @@ namespace projectApiAngular.Data
 
         public DbSet<Maneger> manegers { get; set; }
 
+        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   //configure Customer entity
@@ -97,6 +99,8 @@ namespace projectApiAngular.Data
             modelBuilder.Entity<Customer>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Donner>().HasIndex(u=> u.Email).IsUnique();
             modelBuilder.Entity<Maneger>().HasIndex(m => m.Email).IsUnique();
+            //
+            modelBuilder.Entity<Gift>().HasIndex(n => n.Name).IsUnique();
         }
     }
 }

@@ -6,13 +6,12 @@ namespace projectApiAngular.Repositories
 {
     public class DonnerRepository: IDonnerRepository
     {
-        Chinese_SalesDbContext _context;
+        private readonly Chinese_SalesDbContext _context;
         public DonnerRepository(Chinese_SalesDbContext context)
         {
             _context = context;
         }
         //get
-
         public async Task<IEnumerable<Donner>> GetAllDonners()
         {
 

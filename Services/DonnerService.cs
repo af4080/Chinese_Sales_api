@@ -68,14 +68,15 @@ namespace projectApiAngular.Services
             return new ReadDonnerDto { Id = created.Id, Name = created.Name, Email = created.Email, Phone = created.Phone };
         }
         //update donner
-        public async Task<ReadDonnerDto?> UpdateDonner(int id, CreateDonnerDto dto)
+        public async Task<ReadDonnerDto?> UpdateDonner(int id, UpdateDonnerDto dto)
         {
+            var existing= await _donnerRepository.GetDonnerById(id);
+            if (existing == null) return null;
             var entity = new Donner
             {
-                Id = id,
-                Name = dto.Name,
-                Email = dto.Email,
-                Phone = dto.Phone
+                Name = dto.Name ?? existing.Name,
+                Email = dto.Email ?? existing.Email,
+                Phone = dto.Phone ?? existing.Phone
             };
 
             var updated = await _donnerRepository.UpdateDonner(id, entity);
