@@ -16,6 +16,7 @@ builder.Services.AddScoped<IDonnerService, DonnerService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IGiftRepository, GiftRepository>();
 builder.Services.AddScoped<IGiftService, GiftService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddDbContext<Chinese_SalesDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

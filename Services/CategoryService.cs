@@ -4,7 +4,7 @@ using static projectApiAngular.DTO.CategoryDto;
 
 namespace projectApiAngular.Services
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         public CategoryService(ICategoryRepository categoryRepository)
@@ -28,8 +28,8 @@ namespace projectApiAngular.Services
             {
                 Name = category.Name
             };
-            var addedCategory =  await _categoryRepository.AddCategory(entity);
-            return new ReadCategoryDto { Id=addedCategory.Id, Name = addedCategory.Name };
+            var addedCategory = await _categoryRepository.AddCategory(entity);
+            return new ReadCategoryDto { Id = addedCategory.Id, Name = addedCategory.Name };
         }
 
         //update
@@ -37,7 +37,7 @@ namespace projectApiAngular.Services
         {
             var entity = new Category
             {
-                Name = category.Name
+                Name = category.Name 
             };
             var updatedCategory = await _categoryRepository.UpdateCategory(id, entity);
             if (updatedCategory == null) return null;
@@ -46,7 +46,7 @@ namespace projectApiAngular.Services
         //delete
         public async Task<ReadCategoryDto> DeleteCategory(int id)
         {
-           var deletedCategory = await _categoryRepository.DeleteCategory(id);
+            var deletedCategory = await _categoryRepository.DeleteCategory(id);
             if (deletedCategory == null) return null;
             return new ReadCategoryDto { Id = deletedCategory.Id, Name = deletedCategory.Name };
         }
