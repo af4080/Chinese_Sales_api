@@ -487,6 +487,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
             "minLength": 1,
             "type": "string"
           }
@@ -502,16 +503,21 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 50,
             "minLength": 1,
             "type": "string"
           },
           "email": {
+            "maxLength": 50,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "email"
           },
           "phone": {
+            "maxLength": 15,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "tel"
           }
         },
         "additionalProperties": false
@@ -550,15 +556,20 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 50,
             "type": "string",
             "nullable": true
           },
           "email": {
+            "maxLength": 50,
             "type": "string",
+            "format": "email",
             "nullable": true
           },
           "phone": {
+            "maxLength": 15,
             "type": "string",
+            "format": "tel",
             "nullable": true
           }
         },

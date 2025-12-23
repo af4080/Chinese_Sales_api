@@ -36,14 +36,7 @@ namespace projectApiAngular.Repositories
             return await _context.Gifts.Include(p => p.Purchases).Where(d => d.Purchases.Count == count).ToListAsync();
         }
         //post
-        //public async Task<Gift> AddGift(Gift gift)
-        //{
-        //    _context.Gifts.Add(gift);
-        //    await _context.SaveChangesAsync();
-        //    return gift;
-        //}
-  
-
+   
 public async Task<Gift> AddGift(Gift gift)
     {
         // Validate foreign keys to avoid FK constraint errors

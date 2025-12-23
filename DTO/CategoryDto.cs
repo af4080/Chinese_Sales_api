@@ -7,16 +7,19 @@ namespace projectApiAngular.DTO
         public class CreateCategoryDto
         {
             [Required]
-            public string Name { get; set; }
+            [MaxLength(50)]
+            public required string Name { get; set; }
+
         }
         public class UpdateCategoryDto
         {
+            [MaxLength(50)]
             public string? Name { get; set; }
         }
         public class ReadCategoryDto
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public required string Name { get; set; }
         }
     }
 }

@@ -2,16 +2,31 @@
 
 namespace projectApiAngular.Models
 {
-    public class Donner
+    public enum Role
+    {
+        user,
+        admin
+    }
+    public class User
     {
         public int Id { get; set; }
+
+        public required string Password { get; set; }
         public required string Name { get; set; }
+
         [EmailAddress]
         public required string Email { get; set; }
         [Phone]
         public required string Phone { get; set; }
 
-        public  List<Gift>? Gifts { get; set; }
+       public List<Purchase>? Purchases { get; set; }
+
+        public List<Gift>? WonGifts { get; set; }
+
+        public required Role Role { get; set; }
+
+
+
 
     }
 }

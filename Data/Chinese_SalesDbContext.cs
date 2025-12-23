@@ -9,26 +9,28 @@ namespace projectApiAngular.Data
         public Chinese_SalesDbContext(DbContextOptions<Chinese_SalesDbContext> options) : base(options) { }
 
 
-        public DbSet<Customer> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Donner> Doners { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
 
-        public DbSet<Maneger> manegers { get; set; }
+      //  public DbSet<Maneger> manegers { get; set; }
 
         
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {   //configure Customer entity
+        {   //configure User entity
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Customer>().HasKey(u => u.Id);
-            modelBuilder.Entity<Customer>().Property(u => u.Name).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Customer>().Property(u => u.Email).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Customer>().Property(u => u.Password).IsRequired().HasMaxLength(70);
-            modelBuilder.Entity<Customer>().Property(u => u.Phone).HasMaxLength(15);
-      
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<User>().Property(u => u.Name).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<User>().Property(u => u.Email).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<User>().Property(u => u.Password).IsRequired().HasMaxLength(70);
+            modelBuilder.Entity<User>().Property(u => u.Phone).HasMaxLength(15);
+            modelBuilder.Entity<User>().Property(u => u.Role).IsRequired();
+
+
             //configure Doner entity
             modelBuilder.Entity<Donner>().HasKey(d => d.Id);
             modelBuilder.Entity<Donner>().Property(d => d.Name).IsRequired().HasMaxLength(50);
@@ -49,9 +51,9 @@ namespace projectApiAngular.Data
             //configure Gift entity
             modelBuilder.Entity<Gift>().HasKey(g => g.Id);
             modelBuilder.Entity<Gift>().Property(g => g.Name).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Gift>().Property(g => g.Description).HasMaxLength(500);
+            modelBuilder.Entity<Gift>().Property(g => g.Description).IsRequired().HasMaxLength(300);
             modelBuilder.Entity<Gift>().Property(g => g.Price).IsRequired();
-            modelBuilder.Entity<Gift>().Property(g => g.ImagePath).HasMaxLength(100);
+            modelBuilder.Entity<Gift>().Property(g => g.ImagePath).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<Gift>().Property(g => g.DonerId).IsRequired();
             modelBuilder.Entity<Gift>().Property(g => g.CategoryId).IsRequired();
             modelBuilder.Entity<Gift>().Property(g => g.WinnerId).IsRequired(false);
@@ -90,15 +92,15 @@ namespace projectApiAngular.Data
 
 
             //configure Maneger entity
-            modelBuilder.Entity <Maneger>().HasKey(m => m.Id);
-            modelBuilder.Entity <Maneger>().Property(m => m.Name).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Maneger>().Property(m => m.Email).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity <Maneger>().Property(m => m.Password).IsRequired().HasMaxLength(70);
+            //modelBuilder.Entity <Maneger>().HasKey(m => m.Id);
+            //modelBuilder.Entity <Maneger>().Property(m => m.Name).IsRequired().HasMaxLength(50);
+            //modelBuilder.Entity<Maneger>().Property(m => m.Email).IsRequired().HasMaxLength(50);
+            //modelBuilder.Entity <Maneger>().Property(m => m.Password).IsRequired().HasMaxLength(70);
           
             //email is unique
-            modelBuilder.Entity<Customer>().HasIndex(u => u.Email).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Donner>().HasIndex(u=> u.Email).IsUnique();
-            modelBuilder.Entity<Maneger>().HasIndex(m => m.Email).IsUnique();
+            //modelBuilder.Entity<Maneger>().HasIndex(m => m.Email).IsUnique();
             //
             modelBuilder.Entity<Gift>().HasIndex(n => n.Name).IsUnique();
         }
