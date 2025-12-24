@@ -8,5 +8,6 @@ namespace projectApiAngular.Repositories
         Task<Category?> DeleteCategory(int id);
         Task<IEnumerable<Category>> GetAllCategories();
         Task<Category?> UpdateCategory(int id, Category category);
+
     }
 }

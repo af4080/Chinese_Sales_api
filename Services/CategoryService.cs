@@ -24,16 +24,26 @@ namespace projectApiAngular.Services
         //post
         public async Task<ReadCategoryDto> AddCategory(CreateCategoryDto category)
         {
-            var entity = new Category
+            try
+            {
+             var entity = new Category
             {
                 Name = category.Name
             };
             var addedCategory = await _categoryRepository.AddCategory(entity);
             return new ReadCategoryDto { Id = addedCategory.Id, Name = addedCategory.Name };
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logging framework here)
+                Console.WriteLine($"An error occurred while adding the category: {ex.Message}");
+                throw; // Re-throw the exception after logging it
+            }
+
         }
 
         //update
-        public async Task<ReadCategoryDto> UpdateCategory(int id, CreateCategoryDto category)
+        public async Task<ReadCategoryDto> UpdateCategory(int id, UpdateCategoryDto category)
         {
             var entity = new Category
             {

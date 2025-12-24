@@ -291,3 +291,4 @@ M:\project api-angular\projectApiAngular\obj\Debug\net8.0\refint\projectApiAngul
 M:\project api-angular\projectApiAngular\obj\Debug\net8.0\projectApiAngular.pdb
 M:\project api-angular\projectApiAngular\obj\Debug\net8.0\projectApiAngular.genruntimeconfig.cache
 M:\project api-angular\projectApiAngular\obj\Debug\net8.0\ref\projectApiAngular.dll
+M:\project api-angular\projectApiAngular\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -13,6 +13,7 @@ namespace projectApiAngular.DTO
         }
         public class UpdateCategoryDto
         {
+
             [MaxLength(50)]
             public string? Name { get; set; }
         }

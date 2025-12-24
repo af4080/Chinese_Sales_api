@@ -80,6 +80,8 @@ namespace projectApiAngular.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDonner([FromBody] CreateDonnerDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             try
             {
                 var addedDonner = await _donnerService.AddDonner(dto);
@@ -104,6 +106,8 @@ namespace projectApiAngular.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDonner([FromRoute] int id, [FromBody] UpdateDonnerDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var updatedDonner = await _donnerService.UpdateDonner(id, dto);
             if (updatedDonner == null)
             {

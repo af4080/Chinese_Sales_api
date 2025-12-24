@@ -27,7 +27,9 @@ namespace projectApiAngular.Services
                 Price = d.Price,
                 ImagePath = d.ImagePath,
                 CategoryName = d.category.Name,
-                DonerName = d.Doner.Name
+                DonerName = d.Doner.Name,
+                DonerId = d.DonerId,
+                CategoryId = d.CategoryId
             });
 
             return dtos;
@@ -48,7 +50,9 @@ namespace projectApiAngular.Services
                 Price = g.Price,
                 ImagePath = g.ImagePath,
                 CategoryName = g.category.Name,
-                DonerName = g.Doner.Name
+                DonerName = g.Doner.Name,
+                DonerId = g.DonerId,
+                CategoryId = g.CategoryId
             };
         }
         //get by doner
@@ -63,7 +67,9 @@ namespace projectApiAngular.Services
                 Price = d.Price,
                 ImagePath = d.ImagePath,
                 CategoryName = d.category.Name,
-                DonerName = d.Doner.Name
+                DonerName = d.Doner.Name,
+                DonerId = d.DonerId,
+                CategoryId = d.CategoryId
             });
         }
         //get by num customer
@@ -78,7 +84,9 @@ namespace projectApiAngular.Services
                 Price = d.Price,
                 ImagePath = d.ImagePath,
                 CategoryName = d.category.Name,
-                DonerName = d.Doner.Name
+                DonerName = d.Doner.Name,
+                DonerId = d.DonerId,
+                CategoryId = d.CategoryId
             });
         }
         //post
@@ -93,20 +101,32 @@ namespace projectApiAngular.Services
                 Description = gift.Description,
                 DonerId = gift.DonerId
             };
-            var createdGift = await _repository.AddGift(entity);
-            return new ReadGiftDto
+            try
+            {  
+                var createdGift = await _repository.AddGift(entity);
+
+                return new ReadGiftDto
+                {
+                    Name = createdGift.Name,
+                    Price = createdGift.Price,
+                    CategoryName = createdGift.category.Name,
+                    ImagePath = createdGift.ImagePath,
+                    Description = createdGift.Description,
+                    DonerName = createdGift.Doner.Name,
+                    DonerId = createdGift.DonerId,
+                    CategoryId = createdGift.CategoryId
+                };
+            }
+            catch (Exception ex)
             {
-                Name = createdGift.Name,
-                Price = createdGift.Price,
-                CategoryName = createdGift.category.Name,
-                ImagePath = createdGift.ImagePath,
-                Description = createdGift.Description,
-                DonerName = createdGift.Doner.Name
-            };
+                throw new Exception("An error occurred while adding the gift.", ex);
+            }
+      
         }
 
         //update
         public async Task<ReadGiftDto?> UpdateGift(string name, UpdateGiftDto gift)
+
         {
             var existingGift = await _repository.GetGiftByName(name);
             if (existingGift == null) return null;
@@ -128,6 +148,8 @@ namespace projectApiAngular.Services
                 Description = updated.Description,
                 CategoryName = updated.category.Name,
                 DonerName = updated.Doner.Name,
+                DonerId = updated.DonerId,
+                CategoryId = updated.CategoryId
             };
         }
 
@@ -136,7 +158,10 @@ namespace projectApiAngular.Services
         {
             var del = await _repository.DeleteGift(id);
             if (del == null) return null;
-            return new ReadGiftDto { Name = del.Name, Price = del.Price, ImagePath = del.ImagePath, Description = del.Description, CategoryName = del.category.Name, DonerName = del.Doner.Name };
+            return new ReadGiftDto { Name = del.Name, Price = del.Price, ImagePath = del.ImagePath, Description = del.Description, CategoryName = del.category.Name, DonerName = del.Doner.Name,
+                DonerId = del.DonerId,
+                CategoryId = del.CategoryId
+            };
         }
 
     }
