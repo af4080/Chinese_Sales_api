@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using projectApiAngular.Configurations;
 using projectApiAngular.Data;
 using projectApiAngular.Repositories;
 using projectApiAngular.Services;
@@ -6,11 +7,12 @@ using projectApiAngular.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("jwtSettings"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddScoped<IDonnerRepository, DonnerRepository>();
 builder.Services.AddScoped<IDonnerService, DonnerService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

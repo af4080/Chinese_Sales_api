@@ -11,10 +11,12 @@ namespace projectApiAngular.Services
     public class UserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITokenService _tokenService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository,ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
         //map user
         private static ReadUserDto MapUser(User u)
@@ -56,7 +58,7 @@ namespace projectApiAngular.Services
 
         }
         //login user
-        public async Task<ReadUserDto?> LoginUser(string email, string password)
+        public async Task<string> LoginUser(string email, string password)
         {
             var user= await _userRepository.GetUserByEmail(email);
             if(user == null || !BCrypt.Verify(password , user.Password))
@@ -64,9 +66,10 @@ namespace projectApiAngular.Services
                 throw new Exception("invalid email or password.");
 
             }
-            var 
+            var token = _tokenService.GenerateToken(user.Id,user.Email,user.Name,user.Phone,user.Role);
 
-            return MapUser(user);
+
+            return token;
         }
     }
 }
