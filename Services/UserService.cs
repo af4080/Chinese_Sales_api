@@ -7,13 +7,14 @@ using static projectApiAngular.DTO.UserDto;
 namespace projectApiAngular.Services
 {  
     using BCrypt.Net;
+    using Microsoft.OpenApi.Extensions;
 
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-        public UserService(IUserRepository userRepository,ITokenService tokenService)
+        public UserService(IUserRepository userRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
@@ -27,28 +28,27 @@ namespace projectApiAngular.Services
                 Name = u.Name,
                 Email = u.Email,
                 Phone = u.Phone,
-                Password = u.Password,
-                Role = u.Role
+                Role = Role.user.GetDisplayName()
             };
         }
 
         //register user
         public async Task<ReadUserDto> RegisterUser(CreateUserDto user)
         {
-             if(await _userRepository.GetUserByEmail(user.Email) != null)
+            if (await _userRepository.GetUserByEmail(user.Email) != null)
                 throw new Exception("User with this email already exists.");
-        try
+            try
             {
-                var NewUser= new User
+                var NewUser = new User
                 {
                     Name = user.Name,
                     Email = user.Email,
                     Phone = user.Phone,
                     Password = BCrypt.HashPassword(user.Password),
-                    Role = user.Role
+                    Role = Role.user
                 };
                 var created = await _userRepository.RegisterUser(NewUser);
-               return MapUser(created);
+                return MapUser(created);
 
             }
             catch (Exception ex)
@@ -60,13 +60,13 @@ namespace projectApiAngular.Services
         //login user
         public async Task<string> LoginUser(string email, string password)
         {
-            var user= await _userRepository.GetUserByEmail(email);
-            if(user == null || !BCrypt.Verify(password , user.Password))
+            var user = await _userRepository.GetUserByEmail(email);
+            if (user == null || !BCrypt.Verify(password, user.Password))
             {
                 throw new Exception("invalid email or password.");
 
             }
-            var token = _tokenService.GenerateToken(user.Id,user.Email,user.Name,user.Phone,user.Role);
+            var token = _tokenService.GenerateToken(user.Id, user.Email, user.Name, user.Phone, user.Role);
 
 
             return token;

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("projectApiAngular")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c1d266ddfa624fa33cbff0a3904022d1f1ff0e99")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04293c01a1ca09507b390b16d3d07c4863cad9dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("projectApiAngular")]
 [assembly: System.Reflection.AssemblyTitleAttribute("projectApiAngular")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

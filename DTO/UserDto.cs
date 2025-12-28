@@ -26,8 +26,6 @@ namespace projectApiAngular.DTO
             [MaxLength(15)]
             public required string Phone { get; set; }
 
-            [Required]
-            public required Role Role { get; set; }= Role.user;
         }
         public class ReadUserDto
         {
@@ -36,15 +34,23 @@ namespace projectApiAngular.DTO
             
             public required string Name { get; set; }
 
-            public required string Password { get; set; }
-
             [EmailAddress]
             public required string Email { get; set; }
 
             [Phone]
             public required string Phone { get; set; }
 
-            public required Role Role { get; set; }
+            public required string Role { get; set; }
+
+            public class LoginDto
+            {
+                [EmailAddress]
+                [Required]
+                [MaxLength(50)]
+                public required string Email { get; set; }
+                [StrongPassword]
+                public required string Password { get; set; }
+            }
         }
     }
 }

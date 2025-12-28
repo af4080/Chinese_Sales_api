@@ -416,5 +416,37 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "projectApiAngular.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginDto",
+        "Type": "projectApiAngular.DTO.UserDto\u002BReadUserDto\u002BLoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "projectApiAngular.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userDto",
+        "Type": "projectApiAngular.DTO.UserDto\u002BCreateUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using projectApiAngular.Configurations;
 using projectApiAngular.DTO;
 using projectApiAngular.Models;
@@ -12,9 +13,9 @@ namespace projectApiAngular.Services
     {
         private readonly JwtSettings _jwtSettings;
 
-        public TokenService(JwtSettings jwtSettings)
+        public TokenService(IOptions<JwtSettings> jwtSettings)
         {
-            _jwtSettings = jwtSettings;
+            _jwtSettings = jwtSettings.Value;
         }
 
         public string GenerateToken(int userId, string email, string username, string phone, Role role)
