@@ -34,6 +34,8 @@ builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<IPurchaseService, PurcheseServicecs>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>(); 
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+
 
 builder.Services.AddDbContext<Chinese_SalesDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

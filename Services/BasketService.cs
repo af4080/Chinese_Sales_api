@@ -82,5 +82,16 @@ namespace projectApiAngular.Services
           
 
         }
+        //update amount
+        public async Task<ReadBasketDto?> UpdateBasketAmountAsync(int id, int newAmount)
+        {
+            var basket = await _basketRepository.UpdateBasketAmountAsync(id, newAmount);
+            if (basket == null)
+            {
+                return null;
+            }
+            return Map(basket);
+        }
+        //delete basket
     }
 }
