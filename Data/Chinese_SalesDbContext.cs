@@ -14,10 +14,11 @@ namespace projectApiAngular.Data
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
 
-      //  public DbSet<Maneger> manegers { get; set; }
+        //  public DbSet<Maneger> manegers { get; set; }
 
-        
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -89,6 +90,10 @@ namespace projectApiAngular.Data
             .HasForeignKey(p => p.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            //configure Basket entity
+            modelBuilder.Entity<Basket>().HasKey(b => b.Id);
+            modelBuilder.Entity<Basket>().Property(b => b.UserId).IsRequired();
+            modelBuilder.Entity<Basket>().Property(b => b.GiftId).IsRequired();
 
 
             //configure Maneger entity
@@ -96,7 +101,7 @@ namespace projectApiAngular.Data
             //modelBuilder.Entity <Maneger>().Property(m => m.Name).IsRequired().HasMaxLength(50);
             //modelBuilder.Entity<Maneger>().Property(m => m.Email).IsRequired().HasMaxLength(50);
             //modelBuilder.Entity <Maneger>().Property(m => m.Password).IsRequired().HasMaxLength(70);
-          
+
             //email is unique
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Donner>().HasIndex(u=> u.Email).IsUnique();
