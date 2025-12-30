@@ -58,8 +58,8 @@ namespace projectApiAngular.Services
             var basket = await _basketRepository.GetAllBasketsAsync();
             return basket.Select(Map);
         }
-        //EntertoBasketAsync
-        public async Task<ReadBasketDto> EntertoBasketAsync(CreateBasketDto basketDto)
+        //EnterToBasketAsync
+        public async Task<ReadBasketDto> EnterToBasketAsync(CreateBasketDto basketDto)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace projectApiAngular.Services
 
                 };
 
-                 var basket=await _basketRepository.EntertoBasketAsync(entity);
+                 var basket=await _basketRepository.EnterToBasketAsync(entity);
                 return Map(basket);
             }
             catch (Exception ex)
