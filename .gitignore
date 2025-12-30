@@ -1,1 +1,13 @@
-.vs
+# .NET / Visual Studio / EF
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+appsettings.json
+appsettings.Local.json
+.env
+logs/
+publish/
+
