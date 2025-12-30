@@ -29,10 +29,18 @@ namespace projectApiAngular.Repositories
 
             if (!await _context.Users.AnyAsync(c => c.Id == basket.UserId))
                 throw new ArgumentException($"User with id {basket.UserId} does not exist.");
+            try
+            {
+                _context.Baskets.Add(basket);
+                await _context.SaveChangesAsync();
+                return basket;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while proccing the Basket.", ex);
+            }
 
-            _context.Baskets.Add(basket);
-            await _context.SaveChangesAsync();
-            return basket;
+        
         }
 
         //update amount
