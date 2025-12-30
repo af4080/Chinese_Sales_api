@@ -6,7 +6,7 @@ obj/
 *.suo
 
 appsettings.json
-appsettings.Local.json
+appsettings.Development.json
 .env
 logs/
 publish/
