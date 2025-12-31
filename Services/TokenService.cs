@@ -26,7 +26,8 @@ namespace projectApiAngular.Services
                 new Claim(ClaimTypes.Role,Role.GetName(typeof(Role),role)!),
                 new Claim(ClaimTypes.Email ,email ),
                 new Claim("Phone",phone),
-                new Claim("Id",userId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+
 
 
             };

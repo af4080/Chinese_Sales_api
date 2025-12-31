@@ -54,7 +54,7 @@ namespace projectApiAngular.Services
             return new ReadCategoryDto { Id = updatedCategory.Id, Name = updatedCategory.Name };
         }
         //delete
-        public async Task<ReadCategoryDto> DeleteCategory(int id)
+        public async Task<ReadCategoryDto?> DeleteCategory(int id)
         {
             var deletedCategory = await _categoryRepository.DeleteCategory(id);
             if (deletedCategory == null) return null;

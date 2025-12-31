@@ -1,19 +1,39 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using projectApiAngular.Models;
 using projectApiAngular.Repositories;
+using System.Security.Claims;
 using static projectApiAngular.DTO.BasketDto;
 using static projectApiAngular.DTO.GiftDto;
 using static projectApiAngular.DTO.UserDto;
 
 namespace projectApiAngular.Services
 {
-    public class BasketService
+    public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
-        public BasketService(IBasketRepository basketRepository)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor)
         {
-           _basketRepository = basketRepository;
+            _basketRepository = basketRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
+        //GetCurrentUserId
+
+        private int GetCurrentUserId()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null || !user.Identity!.IsAuthenticated)
+                throw new UnauthorizedAccessException();
+
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+                throw new Exception("User Id claim missing");
+
+            return int.Parse(userIdClaim.Value);
+        }
+
 
         //map to dto
 
@@ -52,39 +72,40 @@ namespace projectApiAngular.Services
         }
 
 
-        //get all baskets   
-        public async Task<IEnumerable<ReadBasketDto>> GetAllBasketsAsync()
+
+        //get my basket
+        public async Task<IEnumerable<ReadBasketDto>> GetMyBasket()
         {
-            var basket = await _basketRepository.GetAllBasketsAsync();
-            return basket.Select(Map);
+            int userId = GetCurrentUserId();
+
+            var baskets = await _basketRepository.GetMyBasket(userId);
+            return baskets.Select(Map);
         }
+
+
         //EnterToBasketAsync
         public async Task<ReadBasketDto> EnterToBasketAsync(CreateBasketDto basketDto)
         {
-            try
+            int userId = GetCurrentUserId();
+
+            var entity = new Basket
             {
-                var entity = new Basket
-                {
+                UserId = userId,
+                GiftId = basketDto.GiftId,
+                amount = basketDto.amount
+            };
 
-                    UserId = basketDto.UserId,
-                    GiftId = basketDto.GiftId,
-                    amount = basketDto.amount,
-
-                };
-
-                 var basket=await _basketRepository.EnterToBasketAsync(entity);
-                return Map(basket);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-          
-
+            var basket = await _basketRepository.EnterToBasketAsync(entity);
+            return Map(basket);
         }
+
         //update amount
         public async Task<ReadBasketDto?> UpdateBasketAmountAsync(int id, int newAmount)
         {
+            if (newAmount <= 0 || newAmount > 1000)
+            {
+                throw new ArgumentException("Amount must be greater than zero and cannot exceed 1000.");
+            }
             var basket = await _basketRepository.UpdateBasketAmountAsync(id, newAmount);
             if (basket == null)
             {
@@ -93,5 +114,14 @@ namespace projectApiAngular.Services
             return Map(basket);
         }
         //delete basket
+        public async Task<ReadBasketDto?> DeleteBasketAsync(int id)
+        {
+            var basket = await _basketRepository.DeleteBasketAsync(id);
+            if (basket == null)
+            {
+                return null;
+            }
+            return Map(basket);
+        }
     }
 }

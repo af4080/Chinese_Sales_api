@@ -11,14 +11,13 @@ namespace projectApiAngular.Repositories
         {
             _context = context;
         }
-
-        //get all baskets
-        public async Task<IEnumerable<Basket>> GetAllBasketsAsync()
+        //get my basket
+        public async Task<IEnumerable<Basket>> GetMyBasket(int userId)
         {
             return await _context.Baskets
+                .Where(b=>b.UserId == userId)
                 .Include(b => b.User)
-                .Include(b => b.gift)
-                .ToListAsync();
+                .Include(b=>b.gift).ToListAsync();
         }
 
         //EnterToBasketAsync
@@ -26,20 +25,11 @@ namespace projectApiAngular.Repositories
         {
             if (!await _context.Gifts.AnyAsync(b => b.Id == basket.GiftId))
                 throw new ArgumentException($"Gift with id {basket.GiftId} does not exist.");
-
-            if (!await _context.Users.AnyAsync(c => c.Id == basket.UserId))
-                throw new ArgumentException($"User with id {basket.UserId} does not exist.");
-            try
-            {
+          
                 _context.Baskets.Add(basket);
                 await _context.SaveChangesAsync();
                 return basket;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while proccing the Basket.", ex);
-            }
-
+         
         
         }
 

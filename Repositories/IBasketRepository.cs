@@ -6,7 +6,7 @@ namespace projectApiAngular.Repositories
     {
         Task<Basket> EnterToBasketAsync(Basket basket);
         Task<Basket?> DeleteBasketAsync(int id);
-        Task<IEnumerable<Basket>> GetAllBasketsAsync();
         Task<Basket?> UpdateBasketAmountAsync(int id, int newAmount);
+        Task<IEnumerable<Basket>> GetMyBasket(int userId);
     }
 }
