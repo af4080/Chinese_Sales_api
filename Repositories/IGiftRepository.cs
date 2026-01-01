@@ -11,5 +11,7 @@ namespace projectApiAngular.Repositories
         Task<IEnumerable<Gift?>> GetGiftByDonnerName(string name);
         Task<Gift?> GetGiftByName(string name);
         Task<Gift?> UpdateGift(string name, Gift gift);
+
+        Task<User?> UpdateGiftWinner(string name, int winnerId);
     }
 }

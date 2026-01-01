@@ -5,7 +5,7 @@ using static projectApiAngular.DTO.BasketDto;
 
 namespace projectApiAngular.Controllers
 {
-    [Authorize] 
+    [Authorize (Roles ="user")] 
     [ApiController]
     [Route("api/[controller]")]
     public class BasketController : ControllerBase
@@ -17,13 +17,6 @@ namespace projectApiAngular.Controllers
             _basketService = basketService;
         }
 
-        // get all baskets
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<ReadBasketDto>>> GetAll()
-        //{
-        //    var baskets = await _basketService.GetAllBasketsAsync();
-        //    return Ok(baskets);
-        //}
 
       
         //get my basket

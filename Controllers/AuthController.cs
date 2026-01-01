@@ -5,6 +5,8 @@ using static projectApiAngular.DTO.UserDto.ReadUserDto;
 
 namespace projectApiAngular.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;

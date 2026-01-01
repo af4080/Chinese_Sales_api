@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using projectApiAngular.DTO;
     using projectApiAngular.Services;
@@ -18,7 +19,8 @@
             _service = service;
         }
 
-        // POST: api/Purchese
+        // add
+        [Authorize(Roles = "user")]
         [HttpPost]
         public async Task<ActionResult<ReadPurcheseDto>> AddPurchase([FromBody] CreatePurcheseDto dto)
         {
@@ -26,7 +28,6 @@
             try
             {
                 var created = await _service.AddPurchaseAsync(dto);
-                // There is no GetById endpoint in the service, so return Created with the created resource.
                 return Created(string.Empty, created);
             }
             catch (Exception ex)
@@ -36,8 +37,8 @@
 
 
         }
-
-        // GET: api/Purchese/buyers
+        //GetBuyersDetails
+        [Authorize(Roles = "Admin")]
         [HttpGet("buyers")]
         public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetBuyersDetails()
         {
@@ -45,7 +46,8 @@
             return Ok(result);
         }
 
-        // GET: api/Purchese/gifts/sorted
+        // GetGiftsSortedBySales
+        [Authorize(Roles = "Admin")]
         [HttpGet("gifts/sorted")]
         public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetGiftsSortedBySales()
         {
@@ -53,7 +55,8 @@
             return Ok(result);
         }
 
-        // GET: api/Purchese/gift/{name}
+        // GetPurchasesByGift
+        [Authorize(Roles = "Admin")]
         [HttpGet("gift/{name}")]
         public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesByGift(string name)
         {
@@ -63,7 +66,8 @@
             return Ok(result);
         }
 
-        // GET: api/Purchese/ordered-by-price
+        // GetPurchasesOrderedByPrice
+        [Authorize(Roles = "Admin")]
         [HttpGet("ordered-by-price")]
         public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesOrderedByPrice()
         {

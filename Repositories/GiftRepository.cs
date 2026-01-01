@@ -98,6 +98,15 @@ namespace projectApiAngular.Repositories
             await _context.SaveChangesAsync();
             return gift;
         }
+        //update winner
+        public async Task<User?> UpdateGiftWinner(string name, int winnerId)
+        {
+            var existingGift = await _context.Gifts.FindAsync(name);
+            existingGift.WinnerId = winnerId;
+            await _context.SaveChangesAsync();
+            var winner = await _context.Users.FindAsync(winnerId);
+            return winner;
+        }
     }
 }
 
