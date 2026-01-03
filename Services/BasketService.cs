@@ -13,10 +13,12 @@ namespace projectApiAngular.Services
     {
         private readonly IBasketRepository _basketRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly ILogger<BasketService> _logger;
+        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor, ILogger<BasketService> logger)
         {
             _basketRepository = basketRepository;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
         //GetCurrentUserId
 
@@ -77,8 +79,11 @@ namespace projectApiAngular.Services
         public async Task<IEnumerable<ReadBasketDto>> GetMyBasket()
         {
             int userId = GetCurrentUserId();
+            _logger.LogInformation(
+         "Fetching basket for user {UserId}",userId);
 
             var baskets = await _basketRepository.GetMyBasket(userId);
+            _logger.LogInformation("User {UserId} has {Count} basket items", userId, baskets.Count());
             return baskets.Select(Map);
         }
 
@@ -87,6 +92,12 @@ namespace projectApiAngular.Services
         public async Task<ReadBasketDto> EnterToBasketAsync(CreateBasketDto basketDto)
         {
             int userId = GetCurrentUserId();
+            _logger.LogInformation(
+            "User {UserId} adding gift {GiftId} amount {Amount} to basket",
+            userId,
+            basketDto.GiftId,
+            basketDto.amount
+);
 
             var entity = new Basket
             {
@@ -96,6 +107,12 @@ namespace projectApiAngular.Services
             };
 
             var basket = await _basketRepository.EnterToBasketAsync(entity);
+            _logger.LogInformation(
+            "Basket item {BasketId} created for user {UserId}",
+            basket.Id,
+            userId
+);
+
             return Map(basket);
         }
 
@@ -104,23 +121,37 @@ namespace projectApiAngular.Services
         {
             if (newAmount <= 0 || newAmount > 1000)
             {
+                _logger.LogWarning(
+                "Invalid basket amount {Amount} for basket {BasketId}",
+                newAmount,
+                id);
                 throw new ArgumentException("Amount must be greater than zero and cannot exceed 1000.");
             }
             var basket = await _basketRepository.UpdateBasketAmountAsync(id, newAmount);
             if (basket == null)
             {
+                        _logger.LogWarning(
+             "Basket {BasketId} not found for update", id);
                 return null;
             }
+            _logger.LogInformation(
+             "Basket {BasketId} updated to amount {Amount}",id,newAmount);
             return Map(basket);
         }
         //delete basket
         public async Task<ReadBasketDto?> DeleteBasketAsync(int id)
         {
+            _logger.LogInformation(
+           "Deleting basket {BasketId}",id);
             var basket = await _basketRepository.DeleteBasketAsync(id);
             if (basket == null)
             {
+                _logger.LogWarning(
+                "Basket {BasketId} not found for deletion", id );
                 return null;
             }
+            _logger.LogInformation(
+            "Basket {BasketId} deleted successfully",id);
             return Map(basket);
         }
     }

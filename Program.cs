@@ -3,11 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using projectApiAngular.Configurations;
 using projectApiAngular.Data;
+using projectApiAngular.Middleware;
 using projectApiAngular.Repositories;
 using projectApiAngular.Services;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File(
+        "Logs/app-.log",
+        rollingInterval: RollingInterval.Day
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 
 // Add services to the container.
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("jwtSettings"));
@@ -70,6 +83,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+app.UseMiddleware<RequestLog>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

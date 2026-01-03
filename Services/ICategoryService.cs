@@ -1,12 +1,13 @@
 ﻿using projectApiAngular.DTO;
+using static projectApiAngular.DTO.CategoryDto;
 
 namespace projectApiAngular.Services
 {
     public interface ICategoryService
     {
-        Task<CategoryDto.ReadCategoryDto> AddCategory(CategoryDto.CreateCategoryDto category);
-        Task<CategoryDto.ReadCategoryDto?> DeleteCategory(int id);
-        Task<IEnumerable<CategoryDto.ReadCategoryDto>> GetAllCategories();
-        Task<CategoryDto.ReadCategoryDto?> UpdateCategory(int id, CategoryDto.UpdateCategoryDto category);
+        Task<ReadCategoryDto> AddCategory(CreateCategoryDto category);
+        Task<ReadCategoryDto?> DeleteCategory(int id);
+        Task<IEnumerable<ReadCategoryDto>> GetAllCategories();
+        Task<ReadCategoryDto?> UpdateCategory(int id, UpdateCategoryDto category);
     }
 }

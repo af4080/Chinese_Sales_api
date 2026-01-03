@@ -10,10 +10,13 @@ namespace projectApiAngular.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IUserService userService)
+
+        public AuthController(IUserService userService, ILogger<AuthController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         //login
@@ -26,19 +29,20 @@ namespace projectApiAngular.Controllers
                 return Ok(new { Token = token });
             }
             catch (Exception ex)
-            {
+            {    
                 return BadRequest(new { Message = ex.Message });
-            }
+            }       
 
         }
 
         //register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDto userDto)
-        {
+        { 
             try
             {
-
+                
+            
                 var createdUser = await _userService.RegisterUser(userDto);
                 return Ok(createdUser);
             }
