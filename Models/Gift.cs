@@ -13,12 +13,13 @@ namespace projectApiAngular.Models
         public  Donner Doner { get; set; }
         public required string  ImagePath { get; set; }
         public int CategoryId { get; set; }
-        public  Category category { get; set; }
+        public Category Category { get; set; }
 
         public int? WinnerId { get; set; }
         public User? Winner { get; set; }
 
-        public List<Purchase>? Purchases { get; set; }
+        public List<Purchase> Purchases { get; set; } = new();
+
 
 
 

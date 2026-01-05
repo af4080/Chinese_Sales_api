@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using projectApiAngular.Services;
 using static projectApiAngular.DTO.GiftDto;
 
 namespace projectApiAngular.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class GiftController : ControllerBase
@@ -16,6 +18,7 @@ namespace projectApiAngular.Controllers
             _giftService = giftService;
         }
         //get
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllGifts()
         {
@@ -42,7 +45,7 @@ namespace projectApiAngular.Controllers
         [HttpGet("numcustomer/{count}")]
         public async Task<IActionResult> GetbyNumCastomer(int count)
         {
-            var gifts = await _giftService.GetbyNumCastomer(count);
+            var gifts = await _giftService.GetbyNumCustomer(count);
             return Ok(gifts);
         }
 
@@ -55,7 +58,8 @@ namespace projectApiAngular.Controllers
             try
             {
                 var g = await _giftService.AddGift(gift);
-                return Ok(g);
+                return CreatedAtAction(nameof(GetGiftByName), new { name = g.Name }, g);
+
             }
             catch (Exception ex)
             {
@@ -81,8 +85,8 @@ namespace projectApiAngular.Controllers
             }
         }
         //update
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGift(string name, [FromBody] UpdateGiftDto gift)
+        [HttpPatch("{name}")]
+        public async Task<IActionResult> UpdateGift( [FromRoute]string name, [FromBody] UpdateGiftDto gift)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

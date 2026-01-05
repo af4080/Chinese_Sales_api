@@ -15,8 +15,8 @@ namespace projectApiAngular.Controllers
         {
             _service = service;
         }
-        [HttpPost]
-        public async  Task<IActionResult> RunLottery(string giftName)
+        [HttpPost("{giftName}")]
+        public async  Task<IActionResult> RunLottery( [FromRoute]string giftName)
         {
             try
             {

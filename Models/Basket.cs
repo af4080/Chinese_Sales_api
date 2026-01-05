@@ -9,9 +9,9 @@
         public User? User { get; set; }
 
         public int GiftId { get; set; }
-        public Gift? gift { get; set; }
+        public Gift? Gift{ get; set; }
 
-        public int amount { get; set; } =1;
+        public int Amount { get; set; } =1;
 
     }
 }

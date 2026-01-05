@@ -21,6 +21,9 @@ namespace projectApiAngular.Services
             {
                 throw new ArgumentException($"Gift with name {giftName} does not exist.");
             }
+            if (gift.WinnerId != null)
+                throw new InvalidOperationException("Lottery already executed for this gift.");
+
 
             var winnerId = await GetWinnerOfGift(gift.Name);
             var winner = await _giftRepository.UpdateGiftWinner(gift.Name, winnerId.Value);

@@ -15,23 +15,36 @@ namespace projectApiAngular.Repositories
         public async Task<IEnumerable<Basket>> GetMyBasket(int userId)
         {
             return await _context.Baskets
-                .Where(b=>b.UserId == userId)
+                .Where(b => b.UserId == userId)
                 .Include(b => b.User)
-                .Include(b=>b.gift).ToListAsync();
+                .Include(b => b.Gift)
+                    .ThenInclude(g => g.Category)
+                .Include(b => b.Gift)
+                    .ThenInclude(g => g.Doner)
+                .ToListAsync();
+
         }
 
         //EnterToBasketAsync
         public async Task<Basket> EnterToBasketAsync(Basket basket)
         {
-            if (!await _context.Gifts.AnyAsync(b => b.Id == basket.GiftId))
-                throw new ArgumentException($"Gift with id {basket.GiftId} does not exist.");
-          
-                _context.Baskets.Add(basket);
+            var existing = await _context.Baskets
+                .FirstOrDefaultAsync(b =>
+                    b.UserId == basket.UserId &&
+                    b.GiftId == basket.GiftId);
+
+            if (existing != null)
+            {
+                existing.Amount += basket.Amount;
                 await _context.SaveChangesAsync();
-                return basket;
-         
-        
+                return existing;
+            }
+
+            _context.Baskets.Add(basket);
+            await _context.SaveChangesAsync();
+            return basket;
         }
+
 
         //update amount
         public async Task<Basket?> UpdateBasketAmountAsync(int id, int newAmount)
@@ -41,7 +54,7 @@ namespace projectApiAngular.Repositories
             {
                 return null;
             }
-            basket.amount = newAmount;
+            basket.Amount = newAmount;
             await _context.SaveChangesAsync();
             return basket;
         }

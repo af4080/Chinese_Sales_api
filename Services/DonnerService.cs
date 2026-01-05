@@ -1,5 +1,6 @@
 ﻿using projectApiAngular.Models;
 using projectApiAngular.Repositories;
+using System.Data;
 using static projectApiAngular.DTO.DonnerDto;
 
 namespace projectApiAngular.Services
@@ -72,14 +73,20 @@ namespace projectApiAngular.Services
         {
             var existing= await _donnerRepository.GetDonnerById(id);
             if (existing == null) return null;
-            var entity = new Donner
+            if (!string.IsNullOrWhiteSpace(dto.Email))
             {
-                Name = dto.Name ?? existing.Name,
-                Email = dto.Email ?? existing.Email,
-                Phone = dto.Phone ?? existing.Phone
-            };
+                var existingEmail = await _donnerRepository.GetDonnerByEmail(dto.Email);
+                if (existingEmail != null && existingEmail.Id != id)
+                    throw new InvalidOperationException(
+                        $"A donner with the email '{dto.Email}' already exists.");
+            }
 
-            var updated = await _donnerRepository.UpdateDonner(id, entity);
+
+            existing.Name = dto.Name ?? existing.Name;
+            existing.Email = dto.Email ?? existing.Email;
+            existing.Phone = dto.Phone ?? existing.Phone;
+
+            var updated = await _donnerRepository.UpdateDonner( existing);
             if (updated == null) return null;
             return new ReadDonnerDto { Id = updated.Id, Name = updated.Name, Email = updated.Email, Phone = updated.Phone };
         }

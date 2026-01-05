@@ -9,7 +9,7 @@ namespace projectApiAngular.DTO
         public class CreateBasketDto
         {
 
-            public int amount { get; set; } = 1;
+            public int Amount { get; set; } = 1;
 
             [Required]
             public int GiftId { get; set; }
@@ -18,14 +18,14 @@ namespace projectApiAngular.DTO
         public class ReadBasketDto
         {
             public int Id { get; set; }
-            public int amount { get; set; } = 1;
+            public int Amount { get; set; } = 1;
             public int UserId { get; set; }
 
-            public required ReadUserDto user { get; set; }
+            public required ReadUserDto User { get; set; }
 
             public int GiftId { get; set; }
 
-            public required ReadGiftDto gift { get; set; }
+            public required ReadGiftDto Gift { get; set; }
         }
     }
 }

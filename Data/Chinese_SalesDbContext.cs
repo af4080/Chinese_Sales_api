@@ -10,7 +10,7 @@ namespace projectApiAngular.Data
 
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Donner> Doners { get; set; }
+        public DbSet<Donner> Donners { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
@@ -32,7 +32,7 @@ namespace projectApiAngular.Data
             modelBuilder.Entity<User>().Property(u => u.Role).IsRequired();
 
 
-            //configure Doner entity
+            //configure Donner entity
             modelBuilder.Entity<Donner>().HasKey(d => d.Id);
             modelBuilder.Entity<Donner>().Property(d => d.Name).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Donner>().Property(d => d.Email).IsRequired().HasMaxLength(50);
@@ -44,7 +44,7 @@ namespace projectApiAngular.Data
             modelBuilder.Entity<Category>().HasIndex(c=> c.Name).IsUnique();
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.Gifts)
-                .WithOne(g => g.category)
+                .WithOne(g => g.Category)
                 .HasForeignKey(g => g.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -94,6 +94,10 @@ namespace projectApiAngular.Data
             modelBuilder.Entity<Basket>().HasKey(b => b.Id);
             modelBuilder.Entity<Basket>().Property(b => b.UserId).IsRequired();
             modelBuilder.Entity<Basket>().Property(b => b.GiftId).IsRequired();
+            modelBuilder.Entity<Basket>()
+             .HasIndex(b => new { b.UserId, b.GiftId })
+             .IsUnique();
+
 
 
             //configure Maneger entity

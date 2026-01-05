@@ -16,25 +16,32 @@ namespace projectApiAngular.Repositories
         //get
         public async Task<IEnumerable<Gift>> GetAllGifts()
         {
-            return await _context.Gifts.Include(g => g.category).Include(d => d.Doner).ToListAsync();
+            return await _context.Gifts.Include(g => g.Category).Include(d => d.Doner).ToListAsync();
         }
         //get by name
         public async Task<Gift?> GetGiftByName(string name)
         {
-            return await _context.Gifts.Include(name => name.category).Include(d => d.Doner)
+            return await _context.Gifts.Include(name => name.Category).Include(d => d.Doner)
                 .FirstOrDefaultAsync(p => p.Name == name);
         }
         //get by doner
         public async Task<IEnumerable<Gift?>> GetGiftByDonnerName(string name)
         {
-            return await _context.Gifts.Include(d => d.Doner).Include(n => n.category)
+            return await _context.Gifts.Include(d => d.Doner).Include(n => n.Category)
                 .Where(p => p.Doner.Name == name).ToListAsync();
         }
         //get by num customer
-        public async Task<IEnumerable<Gift?>> GetbyNumCastomer(int count)
+        public async Task<IEnumerable<Gift?>> GetbyNumCustomer(int count)
         {
-            return await _context.Gifts.Include(p => p.Purchases).Where(d => d.Purchases.Count == count).ToListAsync();
+            return await _context.Gifts
+                 .Include(g => g.Purchases)
+                 .Include(g => g.Category)
+                 .Include(g => g.Doner)
+                 .Where(g => g.Purchases.Count == count)
+                 .ToListAsync();
+
         }
+
         //post
 
         public async Task<Gift> AddGift(Gift gift)
@@ -62,46 +69,50 @@ namespace projectApiAngular.Repositories
             }
 
             // Ensure navigation properties are loaded before returning
-            await _context.Entry(gift).Reference(g => g.category).LoadAsync();
+            await _context.Entry(gift).Reference(g => g.Category).LoadAsync();
             await _context.Entry(gift).Reference(g => g.Doner).LoadAsync();
 
             return gift;
         }
         //update
-        public async Task<Gift?> UpdateGift(string name, Gift gift)
+        public async Task<Gift?> UpdateGift(Gift gift)
         {
-            var existingGift = await _context.Gifts.FindAsync(name);
-            if (existingGift == null)
-            {
-                return null;
-            }
-            existingGift.Name = gift.Name;
-            existingGift.Price = gift.Price;
-            existingGift.CategoryId = gift.CategoryId;
-            existingGift.ImagePath = gift.ImagePath;
-            existingGift.Description = gift.Description;
-            //תורם אי אפשר לשנות אחרי תרומה
+            // Repository assumes entity is already tracked and validated
 
             await _context.SaveChangesAsync();
-            return existingGift;
+            return gift;
         }
+
 
         //delete
         public async Task<Gift?> DeleteGift(int id)
         {
             var gift = await _context.Gifts.FindAsync(id);
             if (gift == null)
-            {
                 return null;
-            }
+
+            bool hasPurchases = await _context.Purchases
+                .AnyAsync(p => p.GiftId == id);
+
+            if (hasPurchases)
+                throw new InvalidOperationException(
+                    "Cannot delete gift that has purchases");
             _context.Gifts.Remove(gift);
             await _context.SaveChangesAsync();
+            await _context.Entry(gift).Reference(g => g.Category).LoadAsync();
+            await _context.Entry(gift).Reference(g => g.Doner).LoadAsync();
+
             return gift;
         }
         //update winner
         public async Task<User?> UpdateGiftWinner(string name, int winnerId)
         {
-            var existingGift = await _context.Gifts.FindAsync(name);
+            var existingGift = await _context.Gifts
+           .FirstOrDefaultAsync(g => g.Name == name);
+            if(existingGift == null)
+            {
+                return null;
+            }   
             existingGift.WinnerId = winnerId;
             await _context.SaveChangesAsync();
             var winner = await _context.Users.FindAsync(winnerId);

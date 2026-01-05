@@ -45,9 +45,9 @@ namespace projectApiAngular.Services
             return new ReadBasketDto
             {
                 Id = b.Id,
-                amount = b.amount,
+                Amount = b.Amount,
                 UserId = b.UserId,
-                user = new ReadUserDto
+                User = new ReadUserDto
                 {
                     Id = b.User.Id,
                     Name = b.User.Name,
@@ -57,17 +57,17 @@ namespace projectApiAngular.Services
 
                 },
                 GiftId = b.GiftId,
-                gift = new ReadGiftDto
+                Gift = new ReadGiftDto
                 {
-                    Name = b.gift.Name,
-                    Description = b.gift.Description,
-                    Id = b.gift.Id,
-                    Price = b.gift.Price,
-                    ImagePath = b.gift.ImagePath,
-                    CategoryName = b.gift.category.Name,
-                    DonerName = b.gift.Doner.Name,
-                    DonerId = b.gift.DonerId,
-                    CategoryId = b.gift.CategoryId
+                    Name = b.Gift.Name,
+                    Description = b.Gift.Description,
+                    Id = b.Gift.Id,
+                    Price = b.Gift.Price,
+                    ImagePath = b.Gift.ImagePath,
+                    CategoryName = b.Gift.Category.Name,
+                    DonerName = b.Gift.Doner.Name,
+                    DonerId = b.Gift.DonerId,
+                    CategoryId = b.Gift.CategoryId
 
                 }
             };
@@ -96,14 +96,14 @@ namespace projectApiAngular.Services
             "User {UserId} adding gift {GiftId} amount {Amount} to basket",
             userId,
             basketDto.GiftId,
-            basketDto.amount
+            basketDto.Amount
 );
 
             var entity = new Basket
             {
                 UserId = userId,
                 GiftId = basketDto.GiftId,
-                amount = basketDto.amount
+                Amount = basketDto.Amount
             };
 
             var basket = await _basketRepository.EnterToBasketAsync(entity);

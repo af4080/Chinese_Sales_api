@@ -19,8 +19,8 @@ namespace projectApiAngular.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
-            var gifts = await _categoryService.GetAllCategories();
-            return Ok(gifts);
+            var categories = await _categoryService.GetAllCategories();
+            return Ok(categories);
         }
         //post
         [HttpPost]
@@ -31,7 +31,8 @@ namespace projectApiAngular.Controllers
             try
             {
                 var c = await _categoryService.AddCategory(category);
-                return Ok(c);
+                return CreatedAtAction(nameof(GetAllCategories), new { id = c.Id }, c);
+
             }
             catch (Exception ex)
             {

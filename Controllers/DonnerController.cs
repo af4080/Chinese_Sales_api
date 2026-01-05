@@ -87,11 +87,13 @@ namespace projectApiAngular.Controllers
             try
             {
                 var addedDonner = await _donnerService.AddDonner(dto);
-                return Ok(addedDonner);
+                return CreatedAtAction(nameof(GetDonnerById), new { id = addedDonner.Id }, addedDonner);
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { error = ex.Message });
+
             }
         }
         //delete

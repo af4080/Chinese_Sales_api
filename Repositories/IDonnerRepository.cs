@@ -11,6 +11,6 @@ namespace projectApiAngular.Repositories
         Task<Donner?> GetDonnerByGiftId(int giftId);
         Task<Donner?> GetDonnerById(int id);
         Task<Donner?> GetDonnerByName(string name);
-        Task<Donner?> UpdateDonner(int id, Donner donner);
+        Task<Donner?> UpdateDonner(Donner donner);
     }
 }

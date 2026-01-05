@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using projectApiAngular.Models;
 using projectApiAngular.Repositories;
 using static projectApiAngular.DTO.GiftDto;
@@ -14,23 +14,28 @@ namespace projectApiAngular.Services
             _repository = repository;
         }
 
+        private static ReadGiftDto MapToReadDto(Gift g)
+        {
+            return new ReadGiftDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description,
+                Price = g.Price,
+                ImagePath = g.ImagePath,
+                CategoryId = g.CategoryId,
+                CategoryName = g.Category.Name,
+                DonerId = g.DonerId,
+                DonerName = g.Doner.Name
+            };
+        }
+
+
         //get
         public async Task<IEnumerable<ReadGiftDto>> GetAllGifts()
         {
             var gifts = await _repository.GetAllGifts();
-            if (gifts == null) return Enumerable.Empty<ReadGiftDto>();
-            var dtos = gifts.Select(d => new ReadGiftDto
-            {
-                Name = d.Name,
-                Description = d.Description,
-                Id = d.Id,
-                Price = d.Price,
-                ImagePath = d.ImagePath,
-                CategoryName = d.category.Name,
-                DonerName = d.Doner.Name,
-                DonerId = d.DonerId,
-                CategoryId = d.CategoryId
-            });
+            var dtos = gifts.Select(d => MapToReadDto(d));
 
             return dtos;
 
@@ -42,52 +47,19 @@ namespace projectApiAngular.Services
 
             var g = await _repository.GetGiftByName(name);
             if (g == null) return null;
-            return new ReadGiftDto
-            {
-                Name = g.Name,
-                Description = g.Description,
-                Id = g.Id,
-                Price = g.Price,
-                ImagePath = g.ImagePath,
-                CategoryName = g.category.Name,
-                DonerName = g.Doner.Name,
-                DonerId = g.DonerId,
-                CategoryId = g.CategoryId
-            };
+            return MapToReadDto(g);
         }
         //get by doner
         public async Task<IEnumerable<ReadGiftDto?>> GetGiftByDonnerName(string name)
         {
             var g = await _repository.GetGiftByDonnerName(name);
-            return g.Select(d => new ReadGiftDto
-            {
-                Name = d.Name,
-                Description = d.Description,
-                Id = d.Id,
-                Price = d.Price,
-                ImagePath = d.ImagePath,
-                CategoryName = d.category.Name,
-                DonerName = d.Doner.Name,
-                DonerId = d.DonerId,
-                CategoryId = d.CategoryId
-            });
+            return g.Select(d => MapToReadDto(d));
         }
         //get by num customer
-        public async Task<IEnumerable<ReadGiftDto?>> GetbyNumCastomer(int count)
+        public async Task<IEnumerable<ReadGiftDto?>> GetbyNumCustomer(int count)
         {
-            var g = await _repository.GetbyNumCastomer(count);
-            return g.Select(d => new ReadGiftDto
-            {
-                Name = d.Name,
-                Description = d.Description,
-                Id = d.Id,
-                Price = d.Price,
-                ImagePath = d.ImagePath,
-                CategoryName = d.category.Name,
-                DonerName = d.Doner.Name,
-                DonerId = d.DonerId,
-                CategoryId = d.CategoryId
-            });
+            var g = await _repository.GetbyNumCustomer(count);
+            return g.Select(d => MapToReadDto(d));
         }
         //post
         public async Task<ReadGiftDto> AddGift(CreateGiftDto gift)
@@ -101,68 +73,59 @@ namespace projectApiAngular.Services
                 Description = gift.Description,
                 DonerId = gift.DonerId
             };
-            try
-            {  
-                var createdGift = await _repository.AddGift(entity);
 
-                return new ReadGiftDto
-                {
-                    Name = createdGift.Name,
-                    Price = createdGift.Price,
-                    CategoryName = createdGift.category.Name,
-                    ImagePath = createdGift.ImagePath,
-                    Description = createdGift.Description,
-                    DonerName = createdGift.Doner.Name,
-                    DonerId = createdGift.DonerId,
-                    CategoryId = createdGift.CategoryId
-                };
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while adding the gift.", ex);
-            }
-      
+            var createdGift = await _repository.AddGift(entity);
+
+            return MapToReadDto(createdGift);
+
+
         }
 
         //update
-        public async Task<ReadGiftDto?> UpdateGift(string name, UpdateGiftDto gift)
-
+        public async Task<ReadGiftDto?> UpdateGift(string name, UpdateGiftDto dto)
         {
             var existingGift = await _repository.GetGiftByName(name);
-            if (existingGift == null) return null;
-            var entity = new Gift
-            {
-                Name = gift.Name ?? existingGift.Name,
-                Price = gift.Price ?? existingGift.Price,
-                CategoryId = gift.CategoryId ?? existingGift.CategoryId,
-                ImagePath = gift.ImagePath ?? existingGift.ImagePath,
-                Description = gift.Description ?? existingGift.Description,
-                DonerId = gift.DonerId ?? existingGift.DonerId
-            };
-            var updated = await _repository.UpdateGift(name, entity);
-            return new ReadGiftDto
-            {
-                Name = name,
-                Price = updated.Price,
-                ImagePath = updated.ImagePath,
-                Description = updated.Description,
-                CategoryName = updated.category.Name,
-                DonerName = updated.Doner.Name,
-                DonerId = updated.DonerId,
-                CategoryId = updated.CategoryId
-            };
+            if (existingGift == null)
+                return null;
+
+            if (dto.Name != null)
+                existingGift.Name = dto.Name;
+
+            if (dto.Price.HasValue)
+                existingGift.Price = dto.Price.Value;
+
+            if (dto.CategoryId.HasValue)
+                existingGift.CategoryId = dto.CategoryId.Value;
+
+            if (dto.ImagePath != null)
+                existingGift.ImagePath = dto.ImagePath;
+
+            if (dto.Description != null)
+                existingGift.Description = dto.Description;
+
+            if (existingGift.WinnerId != null)
+                throw new InvalidOperationException("Cannot update gift after lottery");
+
+
+            // DonerId לא משתנה
+
+            var updated = await _repository.UpdateGift(existingGift);
+            if (updated == null)
+                return null;
+
+            return MapToReadDto(updated);
+
         }
+
 
         //delete
         public async Task<ReadGiftDto?> DeleteGift(int id)
         {
             var del = await _repository.DeleteGift(id);
             if (del == null) return null;
-            return new ReadGiftDto { Name = del.Name, Price = del.Price, ImagePath = del.ImagePath, Description = del.Description, CategoryName = del.category.Name, DonerName = del.Doner.Name,
-                DonerId = del.DonerId,
-                CategoryId = del.CategoryId
-            };
-        }
+            return MapToReadDto(del);
 
+
+        }
     }
 }
