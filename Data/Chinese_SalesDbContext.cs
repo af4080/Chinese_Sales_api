@@ -10,7 +10,7 @@ namespace projectApiAngular.Data
 
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Donner> Donners { get; set; }
+        public DbSet<Donner> Doners { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Purchase> Purchases { get; set; }

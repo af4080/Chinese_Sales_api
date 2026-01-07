@@ -10,6 +10,17 @@ using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+//add cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")  // כתובת הלקוח (ה-Frontend)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -91,6 +102,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowLocalhost");
+
+app.UseRouting();
 
 app.UseAuthentication();
 

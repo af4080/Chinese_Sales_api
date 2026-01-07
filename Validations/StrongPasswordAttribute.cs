@@ -31,10 +31,6 @@ namespace projectApiAngular.Validations
             {
                 return new ValidationResult("Password must contain at least one digit.");
             }
-            if (!Regex.IsMatch(password, "[^a-zA-Z0-9]"))
-            {
-                return new ValidationResult("Password must contain at least one special character.");
-            }
             return ValidationResult.Success;
         }
 
