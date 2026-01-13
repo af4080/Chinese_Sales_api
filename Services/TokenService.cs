@@ -22,11 +22,11 @@ namespace projectApiAngular.Services
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name,username ),
-                new Claim(ClaimTypes.Role,Role.GetName(typeof(Role),role)!),
-                new Claim(ClaimTypes.Email ,email ),
+                new Claim("name",username ),
+                new Claim("role",Role.GetName(typeof(Role),role)!),
+                new Claim("email" ,email ),
                 new Claim("Phone",phone),
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                new Claim("id", userId.ToString())
 
 
 
