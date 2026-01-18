@@ -5,7 +5,7 @@ using static projectApiAngular.DTO.DonnerDto;
 
 namespace projectApiAngular.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class DonnerController: ControllerBase

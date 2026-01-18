@@ -36,7 +36,7 @@ builder.Host.UseSerilog();
 // Add services to the container.
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("jwtSettings"));
 JwtSettings? JwtSettings = builder.Configuration.GetSection("jwtSettings").Get<JwtSettings>();
-if (JwtSettings == null)
+if (JwtSettings is null || string.IsNullOrWhiteSpace(JwtSettings.SecretKey))
 {
     throw new InvalidOperationException("JWT settings are not configured properly.");
 }
@@ -90,7 +90,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
 
-    options.AddPolicy("requireAdmin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("requireAdmin", policy => policy.RequireRole("admin"));
 });
 
 var app = builder.Build();

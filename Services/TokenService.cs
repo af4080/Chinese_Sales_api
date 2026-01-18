@@ -20,6 +20,11 @@ namespace projectApiAngular.Services
 
         public string GenerateToken(int userId, string email, string username, string phone, Role role)
         {
+            var now = DateTime.Now;
+            var expires = now.AddMinutes(_jwtSettings.ExpiryMinutes);
+            Console.WriteLine($"Now: {now}");
+            Console.WriteLine($"Expires: {expires}");
+            Console.WriteLine($"ExpiryMinutes value: {_jwtSettings.ExpiryMinutes}");
             var claims = new[]
             {
                 new Claim("name",username ),
