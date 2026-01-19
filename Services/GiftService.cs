@@ -24,7 +24,7 @@ namespace projectApiAngular.Services
                 Price = g.Price,
                 ImagePath = g.ImagePath,
                 CategoryId = g.CategoryId,
-                CategoryName = g.Category.Name,
+                CategoryName = g.Category?.Name ?? "",
                 DonerId = g.DonerId,
                 DonerName = g.Doner.Name
             };
@@ -96,7 +96,6 @@ namespace projectApiAngular.Services
 
             if (dto.CategoryId.HasValue)
                 existingGift.CategoryId = dto.CategoryId.Value;
-
             if (dto.ImagePath != null)
                 existingGift.ImagePath = dto.ImagePath;
 

@@ -6,7 +6,7 @@ using static projectApiAngular.DTO.GiftDto;
 
 namespace projectApiAngular.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class GiftController : ControllerBase
