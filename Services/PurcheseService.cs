@@ -8,9 +8,11 @@ namespace projectApiAngular.Services
     public class PurcheseServicecs : IPurchaseService
     {
         private readonly IPurchaseRepository _purchaseRepository;
-        public PurcheseServicecs(IPurchaseRepository purchaseRepository)
+        private readonly ILogger<PurcheseServicecs> _logger;
+        public PurcheseServicecs(IPurchaseRepository purchaseRepository, ILogger<PurcheseServicecs> logger)
         {
             _purchaseRepository = purchaseRepository;
+            _logger = logger;
         }
 
         private static ReadPurcheseDto Map(Purchase p) =>
@@ -28,6 +30,7 @@ namespace projectApiAngular.Services
         //add purchase
         public async Task<ReadPurcheseDto> AddPurchaseAsync(CreatePurcheseDto dto)
         {
+            _logger.LogInformation("Adding a new purchase for CustomerId: {CustomerId}, GiftId: {GiftId}", dto.CustomerId, dto.GiftId);
             try
             {
 
@@ -42,12 +45,14 @@ namespace projectApiAngular.Services
                 };
 
                 var saved = await _purchaseRepository.AddPurchase(entity);
+                _logger.LogInformation("Purchase added successfully with Id: {PurchaseId}", saved.Id);
                 return Map(saved);
 
 
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while adding a new purchase for CustomerId: {CustomerId}, GiftId: {GiftId}", dto.CustomerId, dto.GiftId);
                 throw new Exception( ex.Message);
             }
 
@@ -57,24 +62,28 @@ namespace projectApiAngular.Services
         public async Task<IEnumerable<ReadPurcheseDto>> GetBuyersDetails()
         {
             var items = await _purchaseRepository.GetBuyersDetails();
+            _logger.LogInformation("Retrieved {Count} purchase records with buyer details.", items.Count());
             return items.Select(Map);
         }
         //get by gift
         public async Task<IEnumerable<ReadPurcheseDto>> GetPurchasesByGiftAsync(string name)
         {
             var items = await _purchaseRepository.GetPurchasesByGiftAsync(name);
+            _logger.LogInformation("Retrieved {Count} purchase records for gift: {GiftName}.", items.Count(), name);
             return items.Select(Map);
         }
         //sort by sellings
         public async Task<IEnumerable<ReadPurcheseDto>> GetGiftsSortedBySalesAsync()
         {
             var items = await _purchaseRepository.GetGiftsSortedBySalesAsync();
+            _logger.LogInformation("Retrieved {Count} gifts sorted by sales.", items.Count());
             return items.Select(Map);
         }
         //get purchases ordered by price
         public async Task<IEnumerable<ReadPurcheseDto>> GetPurchasesOrderedByPriceAsync()
         {
             var items = await _purchaseRepository.GetPurchasesOrderedByPriceAsync();
+            _logger.LogInformation("Retrieved {Count} purchases ordered by price.", items.Count());
             return items.Select(Map);
         }
     }
