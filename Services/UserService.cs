@@ -15,10 +15,11 @@ namespace projectApiAngular.Services
         private readonly ITokenService _tokenService;
         private readonly ILogger<UserService> _logger;
         
-        public UserService(IUserRepository userRepository, ITokenService tokenService)
+        public UserService(IUserRepository userRepository, ITokenService tokenService,ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _logger = logger;
         }
         //map user
         private static ReadUserDto MapUser(User u)
