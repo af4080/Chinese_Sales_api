@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using projectApiAngular.Configurations;
 using projectApiAngular.Data;
 using projectApiAngular.Middleware;
@@ -22,6 +23,36 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddSwaggerGen(options =>
+{
+    // הגדרת הגדרות האבטחה (Security Definition)
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "נא להזין את הטוקן בלבד (ללא המילה Bearer)"
+    });
+
+    // החלת ההגדרה על כל הבקשות (Security Requirement)
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.File(
@@ -31,7 +62,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
-
 
 // Add services to the container.
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("jwtSettings"));
@@ -59,6 +89,7 @@ builder.Services.AddScoped<IPurchaseService, PurcheseServicecs>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>(); 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddHttpContextAccessor();
 
 

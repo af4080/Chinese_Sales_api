@@ -29,7 +29,7 @@ namespace projectApiAngular.Services
             if (user == null || !user.Identity!.IsAuthenticated)
                 throw new UnauthorizedAccessException();
 
-            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            var userIdClaim = user.FindFirst("id");
             if (userIdClaim == null)
                 throw new Exception("User Id claim missing");
 

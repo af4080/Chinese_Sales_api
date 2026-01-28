@@ -31,7 +31,7 @@ namespace projectApiAngular.DTO
         {
 
             public int Id { get; set; }
-            
+
             public required string Name { get; set; }
 
             [EmailAddress]
@@ -41,7 +41,7 @@ namespace projectApiAngular.DTO
             public required string Phone { get; set; }
 
             public required string Role { get; set; }
-
+        }
             public class LoginDto
             {
                 [EmailAddress]
@@ -51,6 +51,6 @@ namespace projectApiAngular.DTO
                 [StrongPassword]
                 public required string Password { get; set; }
             }
-        }
+        
     }
 }
