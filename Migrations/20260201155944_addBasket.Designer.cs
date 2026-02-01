@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using projectApiAngular.Data;
 
@@ -11,9 +12,11 @@ using projectApiAngular.Data;
 namespace projectApiAngular.Migrations
 {
     [DbContext(typeof(Chinese_SalesDbContext))]
-    partial class Chinese_SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260201155944_addBasket")]
+    partial class addBasket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

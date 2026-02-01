@@ -139,7 +139,7 @@ namespace projectApiAngular.Services
             return Map(basket);
         }
         //delete basket
-        public async Task<ReadBasketDto?> DeleteBasketAsync(int id)
+        public async Task<int?> DeleteBasketAsync(int id)
         {
             _logger.LogInformation(
            "Deleting basket {BasketId}",id);
@@ -152,7 +152,7 @@ namespace projectApiAngular.Services
             }
             _logger.LogInformation(
             "Basket {BasketId} deleted successfully",id);
-            return Map(basket);
+            return basket.Id;
         }
     }
 }

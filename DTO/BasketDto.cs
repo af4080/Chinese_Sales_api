@@ -25,7 +25,7 @@ namespace projectApiAngular.DTO
 
             public int GiftId { get; set; }
 
-            public required ReadGiftDto Gift { get; set; }
+            public ReadGiftDto? Gift { get; set; }
         }
     }
 }
