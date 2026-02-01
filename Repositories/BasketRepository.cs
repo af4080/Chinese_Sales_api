@@ -28,6 +28,8 @@ namespace projectApiAngular.Repositories
         //EnterToBasketAsync
         public async Task<Basket> EnterToBasketAsync(Basket basket)
         {
+            if (!await _context.Gifts.AnyAsync(b => b.Id == basket.GiftId))
+                throw new ArgumentException($" Gift with id {basket.GiftId} does not exsit");
             var existing = await _context.Baskets
                 .FirstOrDefaultAsync(b =>
                     b.UserId == basket.UserId &&
