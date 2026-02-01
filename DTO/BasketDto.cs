@@ -21,7 +21,7 @@ namespace projectApiAngular.DTO
             public int Amount { get; set; } = 1;
             public int UserId { get; set; }
 
-            public  ReadUserDto? User { get; set; }
+            public  ReadUserDto User { get; set; }
 
             public int GiftId { get; set; }
 

@@ -89,7 +89,7 @@ namespace projectApiAngular.Services
 
 
         //EnterToBasketAsync
-        public async Task<ReadBasketDto> EnterToBasketAsync(CreateBasketDto basketDto)
+        public async Task<ReadBasketDto?> EnterToBasketAsync(CreateBasketDto basketDto)
         {
             int userId = GetCurrentUserId();
             _logger.LogInformation(
@@ -112,8 +112,8 @@ namespace projectApiAngular.Services
             basket.Id,
             userId
 );
-
-            return Map(basket);
+            
+            return  new ReadBasketDto {  Id=basket.Id ,Amount=basket.Amount , GiftId =basket.GiftId ,UserId=userId };
         }
 
         //update amount
