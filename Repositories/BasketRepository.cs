@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using projectApiAngular.Data;
 using projectApiAngular.Models;
 
@@ -77,7 +78,11 @@ namespace projectApiAngular.Repositories
             await _context.SaveChangesAsync();
             return basket;
         }
-
+        //BeginTransactionAsync
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
 
     }
 }

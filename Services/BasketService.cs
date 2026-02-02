@@ -5,6 +5,7 @@ using projectApiAngular.Repositories;
 using System.Security.Claims;
 using static projectApiAngular.DTO.BasketDto;
 using static projectApiAngular.DTO.GiftDto;
+using static projectApiAngular.DTO.PurcheseDto;
 using static projectApiAngular.DTO.UserDto;
 
 namespace projectApiAngular.Services
@@ -14,11 +15,14 @@ namespace projectApiAngular.Services
         private readonly IBasketRepository _basketRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<BasketService> _logger;
-        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor, ILogger<BasketService> logger)
+        private readonly IPurchaseService _purchaseService;
+        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor, ILogger<BasketService> logger,IPurchaseService purchaseService)
         {
             _basketRepository = basketRepository;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
+            _purchaseService = purchaseService;
+
         }
         //GetCurrentUserId
 
@@ -153,6 +157,49 @@ namespace projectApiAngular.Services
             _logger.LogInformation(
             "Basket {BasketId} deleted successfully",id);
             return basket.Id;
+        }
+        //puorchese
+        public async Task<bool> BuyAllBasket()
+        {
+            int userId = GetCurrentUserId();
+            _logger.LogInformation("Starting purchase process for user {UserId}", userId);
+
+            var baskets = await _basketRepository.GetMyBasket(userId);
+            if(!baskets.Any())
+            {
+                _logger.LogWarning("No basket item founds for user {userId} to puorchese",userId);
+                return false;
+            }
+            using var transaction = await _basketRepository.BeginTransactionAsync();
+            try
+            {
+                foreach (var basket in baskets)
+                {
+                    for (int i = 0; i < basket.Amount; i++)
+                    {
+                        var p = await _purchaseService.AddPurchaseAsync(new CreatePurcheseDto
+                        {
+                            CustomerId = userId,
+                            GiftId = basket.GiftId,
+                            PurchDate = DateTime.Now
+                        });
+                        if (p == null) throw new Exception($"Fail to create purchase for gift {basket.GiftId}");
+
+                    }
+                    var deletedId = await DeleteBasketAsync(basket.Id);
+                    if (deletedId == null) throw new Exception($"Fail to delete basket item {basket.Id}");
+                }
+                await transaction.CommitAsync();
+                _logger.LogInformation("All basket items purchased and cleared successfully for {userId}", userId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Purchase process failed for user {userId}. Transaction rolled back.", userId);
+                return false;
+            }
+
         }
     }
 }

@@ -94,5 +94,19 @@ namespace projectApiAngular.Controllers
                 return Problem(detail: ex.Message);
             }
         }
+
+        //BuyAllBasket
+        [HttpPost("buy-all")]
+        public async Task<IActionResult> BuyAll()
+        {
+            var success = await _basketService.BuyAllBasket();
+
+            if (success)
+            {
+                return Ok(new { message = "הרכישה בוצעה בהצלחה!" });
+            }
+
+            return BadRequest(new { message = "לא ניתן היה להשלים את הרכישה. וודא שהסל אינו ריק." });
+        }
     }
 }

@@ -38,7 +38,7 @@
 
         }
         //GetBuyersDetails
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("buyers")]
         public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetBuyersDetails()
         {
@@ -47,7 +47,7 @@
         }
 
         // GetGiftsSortedBySales
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("gifts/sorted")]
         public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetGiftsSortedBySales()
         {
@@ -56,7 +56,7 @@
         }
 
         // GetPurchasesByGift
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("gift/{name}")]
         public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesByGift(string name)
         {
@@ -67,7 +67,7 @@
         }
 
         // GetPurchasesOrderedByPrice
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("ordered-by-price")]
         public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesOrderedByPrice()
         {

@@ -1,4 +1,5 @@
-﻿using projectApiAngular.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using projectApiAngular.Models;
 
 namespace projectApiAngular.Repositories
 {
@@ -8,5 +9,6 @@ namespace projectApiAngular.Repositories
         Task<Basket?> DeleteBasketAsync(int id);
         Task<Basket?> UpdateBasketAmountAsync(int id, int newAmount);
         Task<IEnumerable<Basket>> GetMyBasket(int userId);
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

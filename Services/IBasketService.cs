@@ -9,5 +9,6 @@ namespace projectApiAngular.Services
         Task<ReadBasketDto?> EnterToBasketAsync(CreateBasketDto basketDto);
         Task<IEnumerable<ReadBasketDto>> GetMyBasket();
         Task<ReadBasketDto?> UpdateBasketAmountAsync(int id, int newAmount);
+        Task<bool> BuyAllBasket();
     }
 }
