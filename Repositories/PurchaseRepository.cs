@@ -20,7 +20,7 @@ namespace projectApiAngular.Repositories
         //get customer details
         public async Task<IEnumerable<Purchase>> GetBuyersDetails()
         {
-            var purchases = await _context.Purchases.Include(p => p.Castomer).ToListAsync();
+            var purchases = await _context.Purchases.Include(p => p.Castomer).Include(p=>p.Gift).ToListAsync();
             return purchases;
         }
 
