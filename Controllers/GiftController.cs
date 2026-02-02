@@ -26,6 +26,7 @@ namespace projectApiAngular.Controllers
             return Ok(gifts);
         }
         //get by name
+        [AllowAnonymous]
         [HttpGet("{name}")]
         public async Task<IActionResult> GetGiftByName(string name)
         {
