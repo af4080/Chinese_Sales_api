@@ -1,6 +1,12 @@
-﻿using projectApiAngular.DTO;
+﻿using CsvHelper;
+using projectApiAngular.DTO;
 using projectApiAngular.Models;
 using projectApiAngular.Repositories;
+using System.Formats.Asn1;
+using System.Globalization;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 using static projectApiAngular.DTO.UserDto;
 
 namespace projectApiAngular.Services
@@ -11,7 +17,7 @@ namespace projectApiAngular.Services
         private readonly IGiftRepository _giftRepository;
         private readonly ILogger<LotteryService> _logger;
         private readonly IUserRepository _userRepository;
-        private  static int countLotteries = 0;
+        private static int countLotteries = 0;
         public LotteryService(IPurchaseRepository purchaseRepository, IGiftRepository giftRepository, ILogger<LotteryService> logger, IUserRepository userRepository)
         {
             _purchaseRepository = purchaseRepository;
@@ -44,7 +50,7 @@ namespace projectApiAngular.Services
                 });
 
             }
-           
+
             return winners;
         }
 
@@ -95,7 +101,7 @@ namespace projectApiAngular.Services
                     });
                 }
             }
-
+            
             return giftWinners;
         }
 
@@ -104,8 +110,14 @@ namespace projectApiAngular.Services
         {
             _logger.LogInformation("Starting new lottery round");
             await _giftRepository.StartNewChineseSale();
-           return ++countLotteries;
+            return ++countLotteries;
         }
+
+
+
+
+
+
     }
 
 

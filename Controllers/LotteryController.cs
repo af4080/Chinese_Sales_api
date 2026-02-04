@@ -11,10 +11,12 @@ namespace projectApiAngular.Controllers
     public class LotteryController : ControllerBase
     {
         private readonly ILotteryService _lotteryService;
+        private readonly IZipService _zipService;
 
-        public LotteryController(ILotteryService lotteryService)
+        public LotteryController(ILotteryService lotteryService, IZipService zipService)
         {
             _lotteryService = lotteryService;
+            _zipService = zipService;
         }
         [HttpPost]
         public async Task<IActionResult> RunLottery()
@@ -55,6 +57,36 @@ namespace projectApiAngular.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpGet("downled-winner-zip")]
+        public async Task<IActionResult> DownloadGiftWinnersAsZip()
+        {
+
+            var giftWinners = await _lotteryService.GetAllGiftWinners(); // קבלת רשימת הזוכים
+
+            if (giftWinners == null || !giftWinners.Any())
+
+                return NotFound("No winners data to download.");
+
+
+            // יצירת קובץ CSV
+            var csvFileName = "gift_winners.csv";
+            var csvFilePath = Path.Combine(Path.GetTempPath(), csvFileName);
+            _zipService.CreateCsvFile(giftWinners, csvFilePath);
+
+            // יצירת קובץ ZIP
+            var zipFileName = "gift_winners.zip";
+            var zipFilePath = Path.Combine(Path.GetTempPath(), zipFileName);
+            _zipService.CreateZipFile(csvFilePath, zipFilePath);
+
+            // מחיקת הקובץ CSV הזמני
+            System.IO.File.Delete(csvFilePath);
+
+            // קריאת קובץ ה-ZIP לבייטים
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(zipFilePath);
+
+            // שליחת קובץ ה-ZIP להורדה
+            return File(fileBytes, "application/zip", zipFileName);
         }
     }
 }
