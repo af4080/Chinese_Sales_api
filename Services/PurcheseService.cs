@@ -86,5 +86,20 @@ namespace projectApiAngular.Services
             _logger.LogInformation("Retrieved {Count} purchases ordered by price.", items.Count());
             return items.Select(Map);
         }
+        public async Task<decimal> GetTotalSalesRevenue()
+        {
+            _logger.LogInformation("Calculating total sales revenue.");
+
+            var purchases = await _purchaseRepository.GetAll(); // יש לוודא שיש פונקציה כזו במאגר
+            if (purchases == null || !purchases.Any())
+            {
+                _logger.LogWarning("No purchases found.");
+                return 0;
+            }
+
+            decimal totalRevenue = purchases.Sum(purchase => purchase.Gift.Price);  // נניח שיש שדה בשם Amount
+            return totalRevenue;
+        }
+
     }
 }

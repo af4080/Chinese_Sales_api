@@ -9,5 +9,6 @@ namespace projectApiAngular.Repositories
         Task<IEnumerable<Purchase>> GetGiftsSortedBySalesAsync();
         Task<IEnumerable<Purchase>> GetPurchasesByGiftAsync(string name);
         Task<IEnumerable<Purchase>> GetPurchasesOrderedByPriceAsync();
+        Task<IEnumerable<Purchase>> GetAll();
     }
 }

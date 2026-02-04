@@ -69,6 +69,12 @@ namespace projectApiAngular.Repositories
             await _context.SaveChangesAsync();
             return purchase;
         }
+        //get all
+        public async Task<IEnumerable<Purchase>> GetAll()
+        {
+            var purcheses = await _context.Purchases.Include(p=>p.Castomer).Include(p=>p.Gift).ToListAsync();
+            return purcheses;
+        }
 
     }
 }

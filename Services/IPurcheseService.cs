@@ -9,6 +9,8 @@ namespace projectApiAngular.Services
         Task<IEnumerable<PurcheseDto.ReadPurcheseDto>> GetGiftsSortedBySalesAsync();
         Task<IEnumerable<PurcheseDto.ReadPurcheseDto>> GetPurchasesByGiftAsync(string name);
         Task<IEnumerable<PurcheseDto.ReadPurcheseDto>> GetPurchasesOrderedByPriceAsync();
+        Task<decimal> GetTotalSalesRevenue();
+
     }
 }
 

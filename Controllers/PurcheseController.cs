@@ -58,7 +58,7 @@
         // GetPurchasesByGift
         [Authorize(Roles = "admin")]
         [HttpGet("gift/{name}")]
-        public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesByGift(string name)
+        public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetPurchasesByGift(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return BadRequest("Gift name is required.");
 
@@ -69,10 +69,18 @@
         // GetPurchasesOrderedByPrice
         [Authorize(Roles = "admin")]
         [HttpGet("ordered-by-price")]
-        public async Task<ActionResult<IEnumerable<PurcheseDto.ReadPurcheseDto>>> GetPurchasesOrderedByPrice()
+        public async Task<ActionResult<IEnumerable<ReadPurcheseDto>>> GetPurchasesOrderedByPrice()
         {
             var result = await _service.GetPurchasesOrderedByPriceAsync();
             return Ok(result);
+        }
+
+        [HttpGet("total-revenue")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<decimal>> GetTotalSalesRevenue()
+        {
+            var totalRevenue = await _service.GetTotalSalesRevenue();
+            return Ok(totalRevenue);
         }
     }
 }
