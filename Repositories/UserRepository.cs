@@ -28,13 +28,18 @@ namespace projectApiAngular.Repositories
 
         }
 
-     
+
         //get by email for the validation in service
         public async Task<User?> GetUserByEmail(string email)
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
 
+        }
+        //get by id
+        public async Task<User?> GetUserById(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

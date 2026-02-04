@@ -46,14 +46,11 @@ namespace projectApiAngular.Repositories
 
         public async Task<Gift> AddGift(Gift gift)
         {
-            // Validate foreign keys to avoid FK constraint errors
             if (!await _context.Categories.AnyAsync(c => c.Id == gift.CategoryId))
                 throw new ArgumentException($"Category with id {gift.CategoryId} does not exist.");
 
             if (!await _context.Doners.AnyAsync(d => d.Id == gift.DonerId))
                 throw new ArgumentException($"Doner with id {gift.DonerId} does not exist.");
-
-            // Prevent unique index violation on Name (you have a unique index)
             if (await _context.Gifts.AnyAsync(g => g.Name == gift.Name))
                 throw new ArgumentException($"A gift with the name '{gift.Name}' already exists.");
 
@@ -64,11 +61,9 @@ namespace projectApiAngular.Repositories
             }
             catch (DbUpdateException ex)
             {
-                // preserve inner exception for diagnostics
                 throw new InvalidOperationException("Error saving Gift to database. See inner exception for details.", ex);
             }
 
-            // Ensure navigation properties are loaded before returning
             await _context.Entry(gift).Reference(g => g.Category).LoadAsync();
             await _context.Entry(gift).Reference(g => g.Doner).LoadAsync();
 
@@ -106,18 +101,35 @@ namespace projectApiAngular.Repositories
         }
         //update winner
         public async Task<User?> UpdateGiftWinner(string name, int winnerId)
-        {
+        {   
             var existingGift = await _context.Gifts
            .FirstOrDefaultAsync(g => g.Name == name);
             if(existingGift == null)
             {
                 return null;
-            }   
+            } 
+            if (existingGift.WinnerId != null)
+            {
+                throw new InvalidOperationException("it's immposible to do duplicate lotteries");
+            }
             existingGift.WinnerId = winnerId;
             await _context.SaveChangesAsync();
             var winner = await _context.Users.FindAsync(winnerId);
             return winner;
         }
+
+        //start a new chinese_sale
+        public async Task<int?> StartNewChineseSale()
+        {
+            var gifts = await _context.Gifts.ToListAsync();
+            foreach (var gift in gifts)
+            {
+                gift.WinnerId = null; 
+            }
+            await _context.SaveChangesAsync();
+            return null;
+        }
+
     }
 }
 

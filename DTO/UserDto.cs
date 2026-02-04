@@ -40,7 +40,7 @@ namespace projectApiAngular.DTO
             [Phone]
             public required string Phone { get; set; }
 
-            public required string Role { get; set; }
+            public string? Role { get; set; } = "user";
         }
             public class LoginDto
             {

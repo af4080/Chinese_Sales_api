@@ -6,6 +6,7 @@ namespace projectApiAngular.Repositories
     {
         Task<User> RegisterUser(User user);
         Task<User?> GetUserByEmail(string email);
+        Task<User?> GetUserById(int id);
 
     }
 }

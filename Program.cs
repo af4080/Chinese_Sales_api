@@ -81,15 +81,16 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddScoped<IDonnerRepository, DonnerRepository>();
 builder.Services.AddScoped<IDonnerService, DonnerService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IGiftRepository, GiftRepository>();
 builder.Services.AddScoped<IGiftService, GiftService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<IPurchaseService, PurcheseServicecs>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>(); 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<ILotteryService, LotteryService>();
 builder.Services.AddHttpContextAccessor();
 
 
