@@ -35,6 +35,11 @@ namespace projectApiAngular.Services
             {
 
                 int? winnerId = await GetWinnerOfGift(gift.Name);
+                if (winnerId == null)
+                {
+                    _logger.LogWarning("No winner selected for gift:{GiftName} because there were no purchases.",gift.Name);
+                    continue;
+                }
 
                 var winner = await _giftRepository.UpdateGiftWinner(gift.Name, winnerId.Value);
 
@@ -101,7 +106,7 @@ namespace projectApiAngular.Services
                     });
                 }
             }
-            
+
             return giftWinners;
         }
 
@@ -113,11 +118,45 @@ namespace projectApiAngular.Services
             return ++countLotteries;
         }
 
+        public async Task<ReadUserDto?> RunLottery(string giftName)
+        {
+
+            _logger.LogInformation("Starting lottery for gift: {GiftName}", giftName);
+            var gift = await _giftRepository.GetGiftByName(giftName);
+            if (gift == null)
+            {
+                _logger.LogWarning("Gift with name {GiftName} not found.", giftName);
+                throw new ArgumentException($"Gift with name {giftName} does not exist.");
+            }
+            if (gift.WinnerId != null)
+            {
+                _logger.LogWarning("Lottery already executed for gift: {GiftName}", giftName);
+                throw new InvalidOperationException("Lottery already executed for this gift.");
+            }
 
 
 
+            var winnerId = await GetWinnerOfGift(gift.Name);
+            if (winnerId == null)
+            {
+                return null;
+            }
+            var winner = await _giftRepository.UpdateGiftWinner(gift.Name, winnerId.Value);
+            if (winner == null)
+            {
+                _logger.LogWarning("Failed to update winner for gift: {GiftName}", giftName);
+                throw new InvalidOperationException("Error updating gift winner.");
+            }
+            return new ReadUserDto
+            {
+                Id = winner.Id,
+                Name = winner.Name,
+                Email = winner.Email,
+                Phone = winner.Phone,
+            };
+        
 
-
+        }
     }
 
 

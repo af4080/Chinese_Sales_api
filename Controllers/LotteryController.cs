@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using projectApiAngular.DTO;
 using projectApiAngular.Services;
+using static projectApiAngular.DTO.UserDto;
 
 namespace projectApiAngular.Controllers
 {
@@ -32,6 +33,21 @@ namespace projectApiAngular.Controllers
             }
 
         }
+     
+            [HttpPost("{giftName}")]
+            public async Task<IActionResult> RunLotteryForGift(string giftName)
+            {
+                try
+                {
+                    var result = await _lotteryService.RunLottery(giftName);
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
         [HttpGet]
         public async Task<IActionResult> GetAllGiftWinners()
         {

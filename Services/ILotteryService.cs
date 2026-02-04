@@ -10,5 +10,8 @@ namespace projectApiAngular.Services
 
         Task<int> StartNewChineseSale();
 
+        Task<ReadUserDto?> RunLottery(string giftName);
+
+
     }
 }
