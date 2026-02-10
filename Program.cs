@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowLocalhost",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200")  // ëúåáú äì÷åç (ä-Frontend)
+            policy.WithOrigins("http://localhost:4200")  // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½-Frontend)
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSwaggerGen(options =>
 {
-    // äâãøú äâãøåú äàáèçä (Security Definition)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (Security Definition)
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -33,10 +33,10 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "ðà ìäæéï àú äèå÷ï áìáã (ììà äîéìä Bearer)"
+        Description = "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Bearer)"
     });
 
-    // äçìú ääâãøä òì ëì äá÷ùåú (Security Requirement)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (Security Requirement)
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -128,6 +128,21 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 app.UseMiddleware<RequestLog>();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (GiftAlreadyAssignedException ex)
+    {
+        context.Response.StatusCode = Microsoft.AspNetCore.Http.StatusCodes.Status409Conflict;
+        context.Response.ContentType = "application/json";
+        var payload = System.Text.Json.JsonSerializer.Serialize(new { winnerName = ex.WinnerName });
+        await context.Response.WriteAsync(payload);
+    }
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -138,6 +138,7 @@ namespace projectApiAngular.Services
 
 
         }
+        //pagination
         public async Task<PagedResponse<ReadGiftDto>> GetPagedGifts(int pageNumber, int pageSize)
         {
             var (gifts, totalCount) = await _repository.GetPagedGiftsAsync(pageNumber, pageSize);

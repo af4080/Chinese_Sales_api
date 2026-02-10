@@ -16,12 +16,14 @@ namespace projectApiAngular.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<BasketService> _logger;
         private readonly IPurchaseService _purchaseService;
-        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor, ILogger<BasketService> logger,IPurchaseService purchaseService)
+        private readonly IGiftRepository _giftRepository;
+        public BasketService(IBasketRepository basketRepository, IHttpContextAccessor httpContextAccessor, ILogger<BasketService> logger,IPurchaseService purchaseService, IGiftRepository giftRepository)
         {
             _basketRepository = basketRepository;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _purchaseService = purchaseService;
+            _giftRepository = giftRepository;
 
         }
         //GetCurrentUserId
@@ -102,6 +104,12 @@ namespace projectApiAngular.Services
             basketDto.GiftId,
             basketDto.Amount
 );
+
+            var winnerName = await _giftRepository.GetWinnerByGiftId(basketDto.GiftId);
+            if (winnerName != null)
+            {
+                throw new GiftAlreadyAssignedException(winnerName);
+            }
 
             var entity = new Basket
             {

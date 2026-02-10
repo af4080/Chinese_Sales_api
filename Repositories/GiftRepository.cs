@@ -100,6 +100,15 @@ namespace projectApiAngular.Repositories
 
             return gift;
         }
+        //get winner name by gift id
+        public async Task<string?> GetWinnerByGiftId(int giftId)
+        {
+            var gift = await _context.Gifts
+                .Include(g => g.Winner)
+                .FirstOrDefaultAsync(g => g.Id == giftId);
+            return gift?.Winner?.Name;
+        }
+
         //update winner
         public async Task<User?> UpdateGiftWinner(string name, int winnerId)
         {

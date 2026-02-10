@@ -9,10 +9,12 @@ namespace projectApiAngular.Services
     {
         private readonly IPurchaseRepository _purchaseRepository;
         private readonly ILogger<PurcheseServicecs> _logger;
-        public PurcheseServicecs(IPurchaseRepository purchaseRepository, ILogger<PurcheseServicecs> logger)
+        private readonly IGiftRepository _giftRepository;
+        public PurcheseServicecs(IPurchaseRepository purchaseRepository, ILogger<PurcheseServicecs> logger, IGiftRepository giftRepository)
         {
             _purchaseRepository = purchaseRepository;
             _logger = logger;
+            _giftRepository = giftRepository;
         }
 
         private static ReadPurcheseDto Map(Purchase p) =>
@@ -36,6 +38,10 @@ namespace projectApiAngular.Services
 
                 if (dto.PurchDate > DateTime.Now)
                     throw new ArgumentException("Purchase date cannot be in the future.");
+
+                var winnerName = await _giftRepository.GetWinnerByGiftId(dto.GiftId);
+                if (winnerName != null)
+                    throw new GiftAlreadyAssignedException(winnerName);
 
                 var entity = new Purchase
                 {
