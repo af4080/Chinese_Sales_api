@@ -14,6 +14,7 @@ namespace projectApiAngular.Repositories
 
         Task<User?> UpdateGiftWinner(string name, int winnerId);
        Task<int?> StartNewChineseSale();
+        Task<(IEnumerable<Gift> Gifts, int TotalCount)> GetPagedGiftsAsync(int pageNumber, int pageSize);
 
     }
 }

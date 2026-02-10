@@ -1,4 +1,5 @@
 ﻿
+using projectApiAngular.DTO;
 using projectApiAngular.Models;
 using projectApiAngular.Repositories;
 using static projectApiAngular.DTO.GiftDto;
@@ -136,6 +137,16 @@ namespace projectApiAngular.Services
             return MapToReadDto(del);
 
 
+        }
+        public async Task<PagedResponse<ReadGiftDto>> GetPagedGifts(int pageNumber, int pageSize)
+        {
+            var (gifts, totalCount) = await _repository.GetPagedGiftsAsync(pageNumber, pageSize);
+
+            var dtos = gifts.Select(g => MapToReadDto(g));
+
+            _logger.LogInformation("Retrieved page {PageNumber} of gifts.", pageNumber);
+
+            return new PagedResponse<ReadGiftDto>(dtos, pageNumber, pageSize, totalCount);
         }
     }
 }

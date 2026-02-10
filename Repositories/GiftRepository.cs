@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using projectApiAngular.Data;
 using projectApiAngular.Models;
+using static projectApiAngular.Repositories.GiftRepository;
 
 namespace projectApiAngular.Repositories
 {
@@ -101,13 +102,13 @@ namespace projectApiAngular.Repositories
         }
         //update winner
         public async Task<User?> UpdateGiftWinner(string name, int winnerId)
-        {   
+        {
             var existingGift = await _context.Gifts
            .FirstOrDefaultAsync(g => g.Name == name);
-            if(existingGift == null)
+            if (existingGift == null)
             {
                 return null;
-            } 
+            }
             if (existingGift.WinnerId != null)
             {
                 throw new InvalidOperationException("it's immposible to do duplicate lotteries");
@@ -124,12 +125,34 @@ namespace projectApiAngular.Repositories
             var gifts = await _context.Gifts.ToListAsync();
             foreach (var gift in gifts)
             {
-                gift.WinnerId = null; 
+                gift.WinnerId = null;
             }
             await _context.SaveChangesAsync();
             return null;
         }
 
+
+
+
+        public async Task<(IEnumerable<Gift> Gifts, int TotalCount)> GetPagedGiftsAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Gifts
+                .Include(g => g.Category)
+                .Include(g => g.Doner)
+                .AsNoTracking();
+
+            // שליפת סך כל הרשומות
+            var totalCount = await query.CountAsync();
+
+            // ביצוע העימוד ללא תגיות מיותרות
+            var gifts = await query
+                .OrderBy(g => g.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (gifts, totalCount);
+        }
     }
 }
 

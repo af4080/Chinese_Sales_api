@@ -104,5 +104,22 @@ namespace projectApiAngular.Controllers
             }
 
         }
+        [AllowAnonymous]
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPagedGifts([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            try
+            {
+                var response = await _giftService.GetPagedGifts(pageNumber, pageSize);
+                return Ok(response); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }
