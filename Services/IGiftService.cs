@@ -13,5 +13,6 @@ namespace projectApiAngular.Services
         Task<ReadGiftDto?> GetGiftByName(string name);
         Task<ReadGiftDto?> UpdateGift(string name, UpdateGiftDto gift);
         Task<PagedResponse<ReadGiftDto>> GetPagedGifts(int pageNumber, int pageSize);
+        Task<string?> GetWinnerByGiftId(int giftId);
     }
 }

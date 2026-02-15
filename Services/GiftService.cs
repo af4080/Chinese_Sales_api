@@ -138,6 +138,17 @@ namespace projectApiAngular.Services
 
 
         }
+        //get winner by gift id
+        public async Task<string?> GetWinnerByGiftId(int giftId)
+        {
+           
+            var gift = await _repository.GetWinnerByGiftId(giftId);
+            _logger.LogInformation("get winner for gift {giftId}", giftId);
+            return gift;   
+
+        }
+
+
         //pagination
         public async Task<PagedResponse<ReadGiftDto>> GetPagedGifts(int pageNumber, int pageSize)
         {

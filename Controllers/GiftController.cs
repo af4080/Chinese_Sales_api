@@ -87,7 +87,7 @@ namespace projectApiAngular.Controllers
         }
         //update
         [HttpPatch("{name}")]
-        public async Task<IActionResult> UpdateGift( [FromRoute]string name, [FromBody] UpdateGiftDto gift)
+        public async Task<IActionResult> UpdateGift([FromRoute] string name, [FromBody] UpdateGiftDto gift)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -114,7 +114,23 @@ namespace projectApiAngular.Controllers
             try
             {
                 var response = await _giftService.GetPagedGifts(pageNumber, pageSize);
-                return Ok(response); 
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+        [AllowAnonymous]
+        [HttpGet("{giftId}/winner")]
+        public async Task<IActionResult> GetWinnerByGiftId(int giftId)
+        {
+            try
+            {
+                var winner = await _giftService.GetWinnerByGiftId(giftId);
+                if (winner == null)
+                    return NotFound();
+                return Ok( winner );
             }
             catch (Exception ex)
             {
