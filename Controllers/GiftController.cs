@@ -130,7 +130,7 @@ namespace projectApiAngular.Controllers
                 var winner = await _giftService.GetWinnerByGiftId(giftId);
                 if (winner == null)
                     return NotFound();
-                return Ok( winner );
+                return Ok(new { winner });
             }
             catch (Exception ex)
             {
