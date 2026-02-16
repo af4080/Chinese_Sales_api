@@ -26,7 +26,7 @@ namespace projectApiAngular.Services
             _userRepository = userRepository;
             _userRepository = userRepository;
         }
-        public async Task<IEnumerable<ReadUserDto?>> RunLottery()
+        public async Task<IEnumerable<ReadUserDto>> RunLottery()
         {
             _logger.LogInformation("Starting lottery run number {countLotteries}", countLotteries);
             List<ReadUserDto?> winners = new List<ReadUserDto?>();
