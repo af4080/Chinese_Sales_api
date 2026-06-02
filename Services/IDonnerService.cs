@@ -1,16 +1,20 @@
 ﻿using projectApiAngular.DTO;
+using static projectApiAngular.DTO.DonnerDto;
 
 namespace projectApiAngular.Services
 {
     public interface IDonnerService
     {
-        Task<DonnerDto.ReadDonnerDto> AddDonner(DonnerDto.CreateDonnerDto dto);
-        Task<DonnerDto.ReadDonnerDto?> DeleteDonner(int id);
-        Task<IEnumerable<DonnerDto.ReadDonnerDto>> GetAllDonners();
-        Task<DonnerDto.ReadDonnerDto?> GetDonnerByEmail(string email);
-        Task<DonnerDto.ReadDonnerDto?> GetDonnerByGiftId(int giftId);
-        Task<DonnerDto.ReadDonnerDto?> GetDonnerById(int id);
-        Task<DonnerDto.ReadDonnerDto?> GetDonnerByName(string name);
-        Task<DonnerDto.ReadDonnerDto?> UpdateDonner(int id, DonnerDto.CreateDonnerDto dto);
+        Task<ReadDonnerDto> AddDonner(CreateDonnerDto dto);
+        Task<ReadDonnerDto?> DeleteDonner(int id);
+        Task<IEnumerable<ReadDonnerDto>> GetAllDonners();
+        Task<ReadDonnerDto?> GetDonnerByEmail(string email);
+        Task<ReadDonnerDto?> GetDonnerByGiftId(int giftId);
+        Task<ReadDonnerDto?> GetDonnerById(int id);
+        Task<ReadDonnerDto?> GetDonnerByName(string name);
+        Task<ReadDonnerDto?> UpdateDonner(int id, UpdateDonnerDto dto);
+
+
+
     }
 }

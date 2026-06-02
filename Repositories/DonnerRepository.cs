@@ -6,13 +6,12 @@ namespace projectApiAngular.Repositories
 {
     public class DonnerRepository: IDonnerRepository
     {
-        Chinese_SalesDbContext _context;
+        private readonly Chinese_SalesDbContext _context;
         public DonnerRepository(Chinese_SalesDbContext context)
         {
             _context = context;
         }
         //get
-
         public async Task<IEnumerable<Donner>> GetAllDonners()
         {
 
@@ -43,7 +42,8 @@ namespace projectApiAngular.Repositories
         {
             return await _context.Doners
                 .Include(d => d.Gifts)
-                .FirstOrDefaultAsync(d => d.Gifts.Any(g => g.Id == giftId));
+             .FirstOrDefaultAsync(d => d.Gifts != null && d.Gifts.Any(g => g.Id == giftId));
+
         }
         //add donner
         public async Task<Donner> AddDonner(Donner donner)
@@ -53,18 +53,11 @@ namespace projectApiAngular.Repositories
             return donner;
         }
         //update donner
-        public async Task<Donner?> UpdateDonner(int id, Donner donner)
+        public async Task<Donner?> UpdateDonner( Donner donner)
         {
-            var existingDonner = await _context.Doners.FindAsync(id);
-            if (existingDonner == null)
-            {
-                return null;
-            }
-            existingDonner.Name = donner.Name;
-            existingDonner.Email = donner.Email;
-            existingDonner.Phone = donner.Phone;
+          
             await _context.SaveChangesAsync();
-            return existingDonner;
+            return donner;
         }
         //delete donner
         public async Task<Donner?> DeleteDonner(int id)

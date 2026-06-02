@@ -22,6 +22,33 @@ namespace projectApiAngular.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("projectApiAngular.Models.Basket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GiftId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GiftId");
+
+                    b.HasIndex("UserId", "GiftId")
+                        .IsUnique();
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("projectApiAngular.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -43,43 +70,7 @@ namespace projectApiAngular.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("projectApiAngular.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("projectApiAngular.Models.Doner", b =>
+            modelBuilder.Entity("projectApiAngular.Models.Donner", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,8 +114,8 @@ namespace projectApiAngular.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("DonerId")
                         .HasColumnType("int");
@@ -151,40 +142,12 @@ namespace projectApiAngular.Migrations
 
                     b.HasIndex("DonerId");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("WinnerId");
 
                     b.ToTable("Gifts");
-                });
-
-            modelBuilder.Entity("projectApiAngular.Models.Maneger", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("manegers");
                 });
 
             modelBuilder.Entity("projectApiAngular.Models.Purchase", b =>
@@ -213,35 +176,93 @@ namespace projectApiAngular.Migrations
                     b.ToTable("Purchases");
                 });
 
+            modelBuilder.Entity("projectApiAngular.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("projectApiAngular.Models.Basket", b =>
+                {
+                    b.HasOne("projectApiAngular.Models.Gift", "Gift")
+                        .WithMany()
+                        .HasForeignKey("GiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("projectApiAngular.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gift");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("projectApiAngular.Models.Gift", b =>
                 {
-                    b.HasOne("projectApiAngular.Models.Category", "category")
+                    b.HasOne("projectApiAngular.Models.Category", "Category")
                         .WithMany("Gifts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("projectApiAngular.Models.Doner", "Doner")
+                    b.HasOne("projectApiAngular.Models.Donner", "Doner")
                         .WithMany("Gifts")
                         .HasForeignKey("DonerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("projectApiAngular.Models.Customer", "Winner")
+                    b.HasOne("projectApiAngular.Models.User", "Winner")
                         .WithMany("WonGifts")
                         .HasForeignKey("WinnerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("Category");
+
                     b.Navigation("Doner");
 
                     b.Navigation("Winner");
-
-                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("projectApiAngular.Models.Purchase", b =>
                 {
-                    b.HasOne("projectApiAngular.Models.Customer", "Castomer")
+                    b.HasOne("projectApiAngular.Models.User", "Castomer")
                         .WithMany("Purchases")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -263,14 +284,7 @@ namespace projectApiAngular.Migrations
                     b.Navigation("Gifts");
                 });
 
-            modelBuilder.Entity("projectApiAngular.Models.Customer", b =>
-                {
-                    b.Navigation("Purchases");
-
-                    b.Navigation("WonGifts");
-                });
-
-            modelBuilder.Entity("projectApiAngular.Models.Doner", b =>
+            modelBuilder.Entity("projectApiAngular.Models.Donner", b =>
                 {
                     b.Navigation("Gifts");
                 });
@@ -278,6 +292,13 @@ namespace projectApiAngular.Migrations
             modelBuilder.Entity("projectApiAngular.Models.Gift", b =>
                 {
                     b.Navigation("Purchases");
+                });
+
+            modelBuilder.Entity("projectApiAngular.Models.User", b =>
+                {
+                    b.Navigation("Purchases");
+
+                    b.Navigation("WonGifts");
                 });
 #pragma warning restore 612, 618
         }
